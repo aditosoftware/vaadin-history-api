@@ -1,7 +1,7 @@
-package de.aditosoftware.vaadin.addon.client.rpc;
+package de.aditosoftware.vaadin.addon.historyapi.client.rpc;
 
 import com.vaadin.shared.communication.ServerRpc;
-import de.aditosoftware.vaadin.addon.client.accessor.ClientPopStateEvent;
+import de.aditosoftware.vaadin.addon.historyapi.client.accessor.ClientPopStateEvent;
 
 /**
  * Describes the client-to-server communication.

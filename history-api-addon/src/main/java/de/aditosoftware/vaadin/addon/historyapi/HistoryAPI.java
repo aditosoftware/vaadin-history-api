@@ -1,8 +1,8 @@
-package de.aditosoftware.vaadin.addon;
+package de.aditosoftware.vaadin.addon.historyapi;
 
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
-import de.aditosoftware.vaadin.addon.event.PopStateListener;
+import de.aditosoftware.vaadin.addon.historyapi.event.PopStateListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

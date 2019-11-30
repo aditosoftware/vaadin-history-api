@@ -1,4 +1,4 @@
-package de.aditosoftware.vaadin.addon.demo;
+package de.aditosoftware.vaadin.addon.historyapi.demo;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
@@ -7,7 +7,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import de.aditosoftware.vaadin.addon.HistoryAPI;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryAPI;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.annotation.WebServlet;

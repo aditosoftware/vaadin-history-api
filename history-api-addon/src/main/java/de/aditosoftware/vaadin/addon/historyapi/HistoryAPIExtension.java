@@ -1,15 +1,15 @@
-package de.aditosoftware.vaadin.addon;
+package de.aditosoftware.vaadin.addon.historyapi;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
-import de.aditosoftware.vaadin.addon.client.accessor.ClientPopStateEvent;
-import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIClientRpc;
-import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIServerRpc;
-import de.aditosoftware.vaadin.addon.event.PopStateEvent;
-import de.aditosoftware.vaadin.addon.event.PopStateListener;
+import de.aditosoftware.vaadin.addon.historyapi.client.accessor.ClientPopStateEvent;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryAPIClientRpc;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryAPIServerRpc;
+import de.aditosoftware.vaadin.addon.historyapi.event.PopStateEvent;
+import de.aditosoftware.vaadin.addon.historyapi.event.PopStateListener;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Map;
@@ -67,7 +67,7 @@ public class HistoryAPIExtension extends AbstractExtension implements HistoryAPI
   @Override
   public Registration addPopStateListener(@NotNull PopStateListener popStateListener) {
     return super
-        .addListener(de.aditosoftware.vaadin.addon.event.PopStateEvent.class, popStateListener,
+        .addListener(PopStateEvent.class, popStateListener,
             PopStateListener.METHOD);
   }
 

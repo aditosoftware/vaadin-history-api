@@ -1,4 +1,4 @@
-package de.aditosoftware.vaadin.addon;
+package de.aditosoftware.vaadin.addon.historyapi;
 
 import junit.framework.Assert;
 import org.junit.Test;

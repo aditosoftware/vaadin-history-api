@@ -1,14 +1,14 @@
-package de.aditosoftware.vaadin.addon.client;
+package de.aditosoftware.vaadin.addon.historyapi.client;
 
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
-import de.aditosoftware.vaadin.addon.HistoryAPIExtension;
-import de.aditosoftware.vaadin.addon.client.accessor.DelegatingClientRpc;
-import de.aditosoftware.vaadin.addon.client.accessor.HistoryAPINativeAccessor;
-import de.aditosoftware.vaadin.addon.client.accessor.ClientPopStateEvent;
-import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIClientRpc;
-import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIServerRpc;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryAPIExtension;
+import de.aditosoftware.vaadin.addon.historyapi.client.accessor.DelegatingClientRpc;
+import de.aditosoftware.vaadin.addon.historyapi.client.accessor.HistoryAPINativeAccessor;
+import de.aditosoftware.vaadin.addon.historyapi.client.accessor.ClientPopStateEvent;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryAPIClientRpc;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryAPIServerRpc;
 
 @Connect(HistoryAPIExtension.class)
 public class HistoryAPIConnector extends AbstractExtensionConnector {

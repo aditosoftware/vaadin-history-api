@@ -1,6 +1,6 @@
-package de.aditosoftware.vaadin.addon.event;
+package de.aditosoftware.vaadin.addon.historyapi.event;
 
-import de.aditosoftware.vaadin.addon.HistoryAPI;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryAPI;
 import java.net.URI;
 import java.util.EventObject;
 import java.util.Map;

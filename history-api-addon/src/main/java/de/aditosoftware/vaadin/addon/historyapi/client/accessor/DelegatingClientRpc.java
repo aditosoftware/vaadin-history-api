@@ -1,6 +1,6 @@
-package de.aditosoftware.vaadin.addon.client.accessor;
+package de.aditosoftware.vaadin.addon.historyapi.client.accessor;
 
-import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIClientRpc;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryAPIClientRpc;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

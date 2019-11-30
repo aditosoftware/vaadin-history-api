@@ -1,4 +1,4 @@
-package de.aditosoftware.vaadin.addon.client.accessor;
+package de.aditosoftware.vaadin.addon.historyapi.client.accessor;
 
 import java.util.function.Consumer;
 

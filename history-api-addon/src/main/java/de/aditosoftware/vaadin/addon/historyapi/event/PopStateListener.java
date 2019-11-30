@@ -1,4 +1,4 @@
-package de.aditosoftware.vaadin.addon.event;
+package de.aditosoftware.vaadin.addon.historyapi.event;
 
 import com.vaadin.util.ReflectTools;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package de.aditosoftware.vaadin.addon.client.accessor;
+package de.aditosoftware.vaadin.addon.historyapi.client.accessor;
 
 /**
  * Represents an PopState event for the client-side. This holds the state received by the event and

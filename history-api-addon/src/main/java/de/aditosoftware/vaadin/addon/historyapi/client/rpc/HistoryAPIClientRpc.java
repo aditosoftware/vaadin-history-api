@@ -1,7 +1,7 @@
-package de.aditosoftware.vaadin.addon.client.rpc;
+package de.aditosoftware.vaadin.addon.historyapi.client.rpc;
 
 import com.vaadin.shared.communication.ClientRpc;
-import de.aditosoftware.vaadin.addon.HistoryAPI;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryAPI;
 
 /**
  * Describes the server-to-client communication.
@@ -9,7 +9,7 @@ import de.aditosoftware.vaadin.addon.HistoryAPI;
 public interface HistoryAPIClientRpc extends ClientRpc {
 
   /**
-   * @see de.aditosoftware.vaadin.addon.HistoryAPI#go(int)
+   * @see HistoryAPI#go(int)
    */
   void go(int pDelta);
 
