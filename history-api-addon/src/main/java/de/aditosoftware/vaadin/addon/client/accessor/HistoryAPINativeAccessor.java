@@ -1,8 +1,5 @@
 package de.aditosoftware.vaadin.addon.client.accessor;
 
-import de.aditosoftware.vaadin.addon.client.event.PopStateEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -10,18 +7,6 @@ import java.util.function.Consumer;
  * layer.
  */
 public class HistoryAPINativeAccessor {
-
-  private transient List<Consumer<PopStateEvent>> popStateEventListener;
-
-  public HistoryAPINativeAccessor() {
-    popStateEventListener = new ArrayList<>();
-
-    registerPopstateListener();
-  }
-
-  public void addPopStateEventListener(Consumer<PopStateEvent> pPopStateEventListener) {
-    popStateEventListener.add(pPopStateEventListener);
-  }
 
   public native void pushState(String pState, String pTitle, String pURL) /*-{
     $wnd.history.pushState(JSON.parse(pState), pTitle, pURL);
@@ -44,20 +29,25 @@ public class HistoryAPINativeAccessor {
   }-*/;
 
   /**
-   * Will register a PopState Event on the current window. When a popstate event has been triggered
-   * it will call {@link this#handleOnPopstate(PopStateEvent)}.
+   * Will register an PopState listener on the current window. The given callback will be called
+   * when the PopState event has been triggered.
+   *
+   * @param listenerCallback The callback which receives the event.
    */
-  public native void registerPopstateListener() /*-{
+  public native void registerPopStateListener(Consumer<PopStateEvent> listenerCallback) /*-{
     $wnd.addEventListener('popstate', function (ev) {
       var event = this.@HistoryAPINativeAccessor::createPopStateEvent(*)($doc.location, ev.state)
-      this.@HistoryAPINativeAccessor::handleOnPopstate(*)(event);
+      listenerCallback.@Consumer::accept(*)(event)
     }.bind(this))
   }-*/;
 
-  private void handleOnPopstate(PopStateEvent pEvent) {
-    popStateEventListener.forEach(it -> it.accept(pEvent));
-  }
-
+  /**
+   * Will create a new PopStateEvent using the given URI and state.
+   *
+   * @param pUri   The URI for which the event occurred.
+   * @param pState The state of the history.
+   * @return The PopState event.
+   */
   private PopStateEvent createPopStateEvent(String pUri, String pState) {
     return new PopStateEvent(pUri, pState);
   }

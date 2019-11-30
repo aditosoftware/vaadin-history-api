@@ -1,13 +1,17 @@
-package de.aditosoftware.vaadin.addon.client.event;
+package de.aditosoftware.vaadin.addon.client.accessor;
 
 /**
- * Represents an PopState event for the client-side.
+ * Represents an PopState event for the client-side. This holds the state received by the event and
+ * the URI at the moment the event occurs.
  */
 public class PopStateEvent {
 
   private String uri;
   private String state;
 
+  /**
+   * Required zero-args constructor.
+   */
   public PopStateEvent() {
   }
 
