@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Represents an accessor which uses native GWT code to access the HTML5 History API without the GWT layer.
+ */
 public class HistoryAPINativeAccessor {
-    private List<Consumer<PopStateEvent>> popStateEventListener;
+    private transient List<Consumer<PopStateEvent>> popStateEventListener;
 
     public HistoryAPINativeAccessor() {
         popStateEventListener = new ArrayList<>();

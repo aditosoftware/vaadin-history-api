@@ -2,8 +2,15 @@ package de.aditosoftware.vaadin.addon.client.accessor;
 
 import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIClientRpc;
 
+/**
+ * Represents an implementation of the client RPC which delegates the calls to the native accessor.
+ */
 public class DelegatingHistoryAPIClientRpc implements HistoryAPIClientRpc {
-    private final HistoryAPINativeAccessor accessor;
+    private final transient HistoryAPINativeAccessor accessor;
+
+    public DelegatingHistoryAPIClientRpc() {
+        accessor = null;
+    }
 
     public DelegatingHistoryAPIClientRpc(HistoryAPINativeAccessor pAccessor) {
         accessor = pAccessor;

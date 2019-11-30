@@ -13,7 +13,7 @@ import de.aditosoftware.vaadin.addon.HistoryAPIExtension;
 
 @Connect(HistoryAPIExtension.class)
 public class HistoryAPIConnector extends AbstractExtensionConnector {
-    private HistoryAPINativeAccessor nativeAccessor;
+    private transient HistoryAPINativeAccessor nativeAccessor;
 
     public HistoryAPIConnector() {
         nativeAccessor = new HistoryAPINativeAccessor();

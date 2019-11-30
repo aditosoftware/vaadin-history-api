@@ -1,12 +1,15 @@
 package de.aditosoftware.vaadin.addon;
 
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
-import de.aditosoftware.vaadin.addon.client.event.PopStateEvent;
+import de.aditosoftware.vaadin.addon.event.PopStateListener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
+import java.util.Map;
 
 /**
- * Describes the interface for the History.
+ * Describes all capabilities of the History API. This is intended to mimic the actual HTML5 History API.
  * See https://html.spec.whatwg.org/multipage/history.html#the-history-interface
  */
 public interface HistoryAPI {
@@ -17,7 +20,7 @@ public interface HistoryAPI {
      * @param pUI The UI to extend.
      * @return The HistoryAPI instance.
      */
-    static HistoryAPI forUI(UI pUI) {
+    static HistoryAPI forUI(@NotNull UI pUI) {
         return new HistoryAPIExtension(pUI);
     }
 
@@ -26,7 +29,7 @@ public interface HistoryAPI {
      * If zero is given it will stay on this page.
      * If the delta is out of range of the history it will do nothing.
      *
-     * @param pDelta The positiv or negative delta.
+     * @param pDelta The positive or negative delta.
      */
     void go(int pDelta);
 
@@ -49,7 +52,7 @@ public interface HistoryAPI {
      * @param pTitle The title, which will mostly not picked up by most browsers.
      * @param pURL   The URL.
      */
-    void pushState(Object pState, String pTitle, String pURL);
+    void pushState(@Nullable Map<String, String> pState, @Nullable String pTitle, @NotNull String pURL);
 
     /**
      * Pushes the given state, title, and URL onto the history.
@@ -58,7 +61,7 @@ public interface HistoryAPI {
      * @param pTitle The title, which will mostly not picked up by most browser.
      * @param pURL   the URL.
      */
-    void pushState(String pState, String pTitle, String pURL);
+    void pushState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL);
 
     /**
      * Will replace the current state with the given state, title and URL.
@@ -67,7 +70,7 @@ public interface HistoryAPI {
      * @param pTitle The title, which will mostly not picked up by most browsers.
      * @param pURL   The URL.
      */
-    void replaceState(Object pState, String pTitle, String pURL);
+    void replaceState(@Nullable Map<String, String> pState, @Nullable String pTitle, @NotNull String pURL);
 
     /**
      * Will replace the current state with the given state, title and URL.
@@ -76,12 +79,14 @@ public interface HistoryAPI {
      * @param pTitle The title, which will mostly not picked up by most browsers
      * @param pURL   The URL.
      */
-    void replaceState(String pState, String pTitle, String pURL);
+    void replaceState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL);
 
     /**
      * Will register an listener which will be called when the history changes on the client-side.
      *
-     * @param pPopStateEvent The consumer for the popstate event.
+     * @param popStateListener The listener which will be executed.
+     * @return The registration which can unregister the listener.
      */
-    void addPopStateListener(Consumer<PopStateEvent> pPopStateEvent);
+    @NotNull
+    Registration addPopStateListener(@NotNull PopStateListener popStateListener);
 }

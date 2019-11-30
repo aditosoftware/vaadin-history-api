@@ -2,27 +2,23 @@ package de.aditosoftware.vaadin.addon;
 
 import com.google.gson.Gson;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
-import de.aditosoftware.vaadin.addon.HistoryAPI;
 import de.aditosoftware.vaadin.addon.client.event.PopStateEvent;
 import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIClientRpc;
 import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIServerRpc;
+import de.aditosoftware.vaadin.addon.event.PopStateListener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.Map;
 
 public class HistoryAPIExtension extends AbstractExtension implements HistoryAPI {
     private transient Gson gson = new Gson();
-    private List<Consumer<PopStateEvent>> popStateListener;
 
     public HistoryAPIExtension(UI pUI) {
         extend(pUI);
-        popStateListener = new ArrayList<>();
-
-        registerRpc((PopStateEvent it) -> {
-            this.popStateListener.forEach(i -> i.accept(it));
-        }, HistoryAPIServerRpc.class);
     }
 
     @Override
@@ -41,35 +37,57 @@ public class HistoryAPIExtension extends AbstractExtension implements HistoryAPI
     }
 
     @Override
-    public void pushState(Object pState, String pTitle, String pURL) {
-        getProxy().pushState(encodedState(pState), pTitle, pURL);
+    public void pushState(@Nullable Map<String, String> pState, @Nullable String pTitle, @NotNull String pURL) {
+        getProxy().pushState(encodeMap(pState), pTitle, pURL);
     }
 
     @Override
-    public void pushState(String pState, String pTitle, String pURL) {
-        pushState((Object) pState, pTitle, pURL);
+    public void pushState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
+        getProxy().pushState(encodeString(pState), pTitle, pURL);
     }
 
     @Override
-    public void replaceState(Object pState, String pTitle, String pURL) {
-        getProxy().replaceState(encodedState(pState), pTitle, pURL);
+    public void replaceState(@Nullable Map<String, String> pState, @Nullable String pTitle, @NotNull String pURL) {
+        getProxy().replaceState(encodeMap(pState), pTitle, pURL);
     }
 
     @Override
-    public void replaceState(String pState, String pTitle, String pURL) {
-        replaceState((Object) pState, pTitle, pURL);
+    public void replaceState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
+        getProxy().pushState(encodeString(pState), pTitle, pURL);
     }
 
+    @NotNull
     @Override
-    public void addPopStateListener(Consumer<PopStateEvent> pPopStateEvent) {
-        popStateListener.add(pPopStateEvent);
+    public Registration addPopStateListener(@NotNull PopStateListener popStateListener) {
+        return super.addListener(de.aditosoftware.vaadin.addon.event.PopStateEvent.class, popStateListener, PopStateListener.METHOD);
     }
 
+    /**
+     * Will return the RPC proxy for the {@link HistoryAPIClientRpc}.
+     *
+     * @return The RPC proxy.
+     */
     private HistoryAPIClientRpc getProxy() {
         return getRpcProxy(HistoryAPIClientRpc.class);
     }
 
-    private String encodedState(Object pState) {
-        return gson.toJson(pState);
+    /**
+     * Will encode the given key/value Map into an JSON string using GSON.
+     *
+     * @param pMap The map to encode.
+     * @return The encoded map.
+     */
+    private String encodeMap(Map<String, String> pMap) {
+        return gson.toJson(pMap);
+    }
+
+    /**
+     * Will encoding the given string into an JSON string using GSON.
+     *
+     * @param pString The string to encode.
+     * @return The encoded string.
+     */
+    private String encodeString(String pString) {
+        return gson.toJson(pString);
     }
 }

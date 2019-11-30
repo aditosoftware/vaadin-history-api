@@ -1,5 +1,8 @@
 package de.aditosoftware.vaadin.addon.client.event;
 
+/**
+ * Represents an PopState event for the client-side.
+ */
 public class PopStateEvent {
     private String uri;
     private String state;
