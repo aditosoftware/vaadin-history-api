@@ -8,6 +8,8 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import de.aditosoftware.vaadin.addon.HistoryAPI;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 
 @Theme("demo")
@@ -33,16 +35,10 @@ public class DemoUI extends UI {
 
     HistoryAPI historyAPI = HistoryAPI.forUI(UI.getCurrent());
 
-    historyAPI.addPopStateListener(System.out::println);
+    historyAPI.addPopStateListener(popStateEvent -> System.out.println(popStateEvent));
 
-    //historyAPI.pushState(new TestPOJO(), "", "/test");
-
-    System.out.println(historyAPI);
-  }
-
-  private static class TestPOJO {
-
-    private boolean test = true;
-    private String ttt = "asdf";
+    Map<String, String> state = new HashMap<>();
+    state.put("id", "test");
+    historyAPI.pushState(state, "", "/test");
   }
 }
