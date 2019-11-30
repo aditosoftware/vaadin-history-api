@@ -4,49 +4,51 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
+import de.aditosoftware.vaadin.addon.HistoryAPIExtension;
 import de.aditosoftware.vaadin.addon.client.accessor.DelegatingHistoryAPIClientRpc;
 import de.aditosoftware.vaadin.addon.client.accessor.HistoryAPINativeAccessor;
 import de.aditosoftware.vaadin.addon.client.event.PopStateEvent;
 import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIClientRpc;
 import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIServerRpc;
-import de.aditosoftware.vaadin.addon.HistoryAPIExtension;
 
 @Connect(HistoryAPIExtension.class)
 public class HistoryAPIConnector extends AbstractExtensionConnector {
-    private transient HistoryAPINativeAccessor nativeAccessor;
 
-    public HistoryAPIConnector() {
-        nativeAccessor = new HistoryAPINativeAccessor();
-        nativeAccessor.addPopStateEventListener(this::handleNativePopStateEvent);
+  private transient HistoryAPINativeAccessor nativeAccessor;
 
-        // Register the Client RPC.
-        registerClientRpc(nativeAccessor);
-    }
+  public HistoryAPIConnector() {
+    nativeAccessor = new HistoryAPINativeAccessor();
+    nativeAccessor.addPopStateEventListener(this::handleNativePopStateEvent);
 
-    @Override
-    protected void extend(ServerConnector target) {
-    }
+    // Register the Client RPC.
+    registerClientRpc(nativeAccessor);
+  }
 
-    @Override
-    public void onStateChanged(StateChangeEvent stateChangeEvent) {
-        super.onStateChanged(stateChangeEvent);
-    }
+  @Override
+  protected void extend(ServerConnector target) {
+  }
 
-    @Override
-    public HistoryAPIState getState() {
-        return (HistoryAPIState) super.getState();
-    }
+  @Override
+  public void onStateChanged(StateChangeEvent stateChangeEvent) {
+    super.onStateChanged(stateChangeEvent);
+  }
 
-    /**
-     * Will register the ClientRPC, which fully delegates the implementation to the native history API accessor.
-     *
-     * @param pNativeAccessor Instance of the native accessor.
-     */
-    private void registerClientRpc(HistoryAPINativeAccessor pNativeAccessor) {
-        registerRpc(HistoryAPIClientRpc.class, new DelegatingHistoryAPIClientRpc(pNativeAccessor));
-    }
+  @Override
+  public HistoryAPIState getState() {
+    return (HistoryAPIState) super.getState();
+  }
 
-    private void handleNativePopStateEvent(PopStateEvent pPopStateEvent) {
-        getRpcProxy(HistoryAPIServerRpc.class).onPopState(pPopStateEvent);
-    }
+  /**
+   * Will register the ClientRPC, which fully delegates the implementation to the native history API
+   * accessor.
+   *
+   * @param pNativeAccessor Instance of the native accessor.
+   */
+  private void registerClientRpc(HistoryAPINativeAccessor pNativeAccessor) {
+    registerRpc(HistoryAPIClientRpc.class, new DelegatingHistoryAPIClientRpc(pNativeAccessor));
+  }
+
+  private void handleNativePopStateEvent(PopStateEvent pPopStateEvent) {
+    getRpcProxy(HistoryAPIServerRpc.class).onPopState(pPopStateEvent);
+  }
 }

@@ -6,24 +6,25 @@ import java.util.Map;
  * Represents an PopState event.
  */
 public class PopStateEvent {
-    private String uri;
-    private String state;
-    private Map<String, String> stateMap;
 
-    public PopStateEvent(String uri, String state, Map<String, String> pStateMap) {
-        this.uri = uri;
-        this.state = state;
-    }
+  private String uri;
+  private String state;
+  private Map<String, String> stateMap;
 
-    public String getUrl() {
-        return uri;
-    }
+  public PopStateEvent(String uri, String state, Map<String, String> pStateMap) {
+    this.uri = uri;
+    this.state = state;
+  }
 
-    public String getState() {
-        return state;
-    }
+  public String getUrl() {
+    return uri;
+  }
 
-    public Map<String, String> getStateAsMap() {
-        return stateMap;
-    }
+  public String getState() {
+    return state;
+  }
+
+  public Map<String, String> getStateAsMap() {
+    return stateMap;
+  }
 }
