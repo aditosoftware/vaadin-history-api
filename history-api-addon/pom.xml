@@ -81,6 +81,13 @@
 			<version>2.6.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>18.0.0</version>
+		</dependency>
+
+
 		<!-- This can be replaced with TestNG or some other test framework supported by the surefire plugin -->
 		<dependency>
 			<groupId>junit</groupId>
