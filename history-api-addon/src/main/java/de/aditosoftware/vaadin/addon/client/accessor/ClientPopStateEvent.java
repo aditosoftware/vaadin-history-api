@@ -4,7 +4,7 @@ package de.aditosoftware.vaadin.addon.client.accessor;
  * Represents an PopState event for the client-side. This holds the state received by the event and
  * the URI at the moment the event occurs.
  */
-public class PopStateEvent {
+public class ClientPopStateEvent {
 
   private String uri;
   private String state;
@@ -12,10 +12,10 @@ public class PopStateEvent {
   /**
    * Required zero-args constructor.
    */
-  public PopStateEvent() {
+  public ClientPopStateEvent() {
   }
 
-  public PopStateEvent(String uri, String state) {
+  public ClientPopStateEvent(String uri, String state) {
     this.uri = uri;
     this.state = state;
   }

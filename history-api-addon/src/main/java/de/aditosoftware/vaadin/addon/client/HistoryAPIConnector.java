@@ -6,7 +6,7 @@ import com.vaadin.shared.ui.Connect;
 import de.aditosoftware.vaadin.addon.HistoryAPIExtension;
 import de.aditosoftware.vaadin.addon.client.accessor.DelegatingClientRpc;
 import de.aditosoftware.vaadin.addon.client.accessor.HistoryAPINativeAccessor;
-import de.aditosoftware.vaadin.addon.client.accessor.PopStateEvent;
+import de.aditosoftware.vaadin.addon.client.accessor.ClientPopStateEvent;
 import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIClientRpc;
 import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIServerRpc;
 
@@ -41,9 +41,9 @@ public class HistoryAPIConnector extends AbstractExtensionConnector {
   /**
    * Will send the given PopState event to the server.
    *
-   * @param pPopStateEvent The PopState event.
+   * @param pClientPopStateEvent The PopState event.
    */
-  private void sendPopStateEvent(PopStateEvent pPopStateEvent) {
-    getRpcProxy(HistoryAPIServerRpc.class).onPopState(pPopStateEvent);
+  private void sendPopStateEvent(ClientPopStateEvent pClientPopStateEvent) {
+    getRpcProxy(HistoryAPIServerRpc.class).onPopState(pClientPopStateEvent);
   }
 }

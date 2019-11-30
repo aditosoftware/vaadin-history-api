@@ -34,7 +34,7 @@ public class HistoryAPINativeAccessor {
    *
    * @param listenerCallback The callback which receives the event.
    */
-  public native void registerPopStateListener(Consumer<PopStateEvent> listenerCallback) /*-{
+  public native void registerPopStateListener(Consumer<ClientPopStateEvent> listenerCallback) /*-{
     $wnd.addEventListener('popstate', function (ev) {
       var event = this.@HistoryAPINativeAccessor::createPopStateEvent(*)($doc.location, ev.state)
       listenerCallback.@Consumer::accept(*)(event)
@@ -48,8 +48,8 @@ public class HistoryAPINativeAccessor {
    * @param pState The state of the history.
    * @return The PopState event.
    */
-  private PopStateEvent createPopStateEvent(String pUri, String pState) {
-    return new PopStateEvent(pUri, pState);
+  private ClientPopStateEvent createPopStateEvent(String pUri, String pState) {
+    return new ClientPopStateEvent(pUri, pState);
   }
 }
 
