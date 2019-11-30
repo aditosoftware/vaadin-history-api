@@ -1,11 +1,17 @@
 package de.aditosoftware.vaadin.addon;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
+import de.aditosoftware.vaadin.addon.client.accessor.ClientPopStateEvent;
 import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIClientRpc;
+import de.aditosoftware.vaadin.addon.client.rpc.HistoryAPIServerRpc;
+import de.aditosoftware.vaadin.addon.event.PopStateEvent;
 import de.aditosoftware.vaadin.addon.event.PopStateListener;
+import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,6 +22,8 @@ public class HistoryAPIExtension extends AbstractExtension implements HistoryAPI
 
   public HistoryAPIExtension(UI pUI) {
     extend(pUI);
+
+    registerServerRpc();
   }
 
   @Override
@@ -90,5 +98,59 @@ public class HistoryAPIExtension extends AbstractExtension implements HistoryAPI
    */
   private String encodeString(String pString) {
     return gson.toJson(pString);
+  }
+
+  /**
+   * Will create a new server-side PopState event from the given client-side PopState event. If the
+   * given state in the client-side event can not be decoded using GSON it will not set the stateMap
+   * property, but the state property.
+   *
+   * @param event The actual client-side PopState event.
+   * @return The created server-side PopState event.
+   * @throws IllegalArgumentException If any part the given client-side PopState event can not be
+   *                                  decoded.
+   */
+  private PopStateEvent createServerPopStateEvent(@NotNull ClientPopStateEvent event) {
+    // Try to parse the given string URI.
+    URI eventURI = URI.create(event.getUri());
+
+    // Try to parse the state of the event into an string/string map using GSON.
+    Map<String, String> stateMap = null;
+    try {
+      stateMap = gson
+          .fromJson(event.getState(), buildStringStringMapType());
+    } catch (Exception ignored) {
+    }
+
+    return new PopStateEvent(this, eventURI, event.getState(), stateMap);
+  }
+
+  /**
+   * Will build a Type which represents an string/string map.
+   *
+   * @return The type.
+   */
+  private static Type buildStringStringMapType() {
+    return new TypeToken<Map<String, String>>() {
+    }.getType();
+  }
+
+  /**
+   * Will register the server RPC, which will process the client-side PopState events.
+   */
+  private void registerServerRpc() {
+    registerRpc(this::handleClientPopStateEvent, HistoryAPIServerRpc.class);
+  }
+
+  /**
+   * Will handle incoming client PopState events. It will convert the client-side event into an
+   * server-side event and trigger the event listeners.
+   *
+   * @param clientEvent The incoming client server-event.
+   */
+  private void handleClientPopStateEvent(ClientPopStateEvent clientEvent) {
+    PopStateEvent serverEvent = createServerPopStateEvent(clientEvent);
+
+    fireEvent(serverEvent);
   }
 }

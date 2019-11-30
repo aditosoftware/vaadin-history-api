@@ -1,6 +1,7 @@
 package de.aditosoftware.vaadin.addon.event;
 
 import de.aditosoftware.vaadin.addon.HistoryAPI;
+import java.net.URI;
 import java.util.EventObject;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
@@ -11,11 +12,11 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PopStateEvent extends EventObject {
 
-  private String uri;
+  private URI uri;
   private String state;
   private Map<String, String> stateMap;
 
-  public PopStateEvent(HistoryAPI pSource, String uri, String state,
+  public PopStateEvent(HistoryAPI pSource, URI uri, String state,
       Map<String, String> pStateMap) {
     super(pSource);
     this.uri = uri;
@@ -28,7 +29,7 @@ public class PopStateEvent extends EventObject {
    * @return The current URI.
    */
   @NotNull
-  public String getUri() {
+  public URI getUri() {
     return uri;
   }
 
