@@ -16,13 +16,22 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Represents the implements of {@link HistoryAPI} as Vaadin UI extension. This extension can only
+ * be used on an {@link UI}. You may use {@link HistoryAPI#forUI(UI)} to instantiate a new
+ * extension.
+ */
 public class HistoryAPIExtension extends AbstractExtension implements HistoryAPI {
 
   private transient Gson gson = new Gson();
 
+  /**
+   * Constructor for this extension. You may use {@link HistoryAPI#forUI(UI)} instead.
+   *
+   * @param pUI The UI on which this extension should be registered.
+   */
   public HistoryAPIExtension(UI pUI) {
     extend(pUI);
-
     registerServerRpc();
   }
 
