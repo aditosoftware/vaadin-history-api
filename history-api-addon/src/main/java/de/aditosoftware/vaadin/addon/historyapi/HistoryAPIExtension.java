@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HistoryAPIExtension extends AbstractExtension implements HistoryAPI {
 
-  private transient Gson gson = new Gson();
+  private static transient Gson gson = new Gson();
 
   /**
    * Constructor for this extension. You may use {@link HistoryAPI#forUI(UI)} instead.
