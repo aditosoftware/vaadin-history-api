@@ -7,39 +7,9 @@ This exists because the [Vaadin implementation](https://github.com/vaadin/framew
 
 Official releases of this add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to https://vaadin.com/addon/history-api
 
-## Building and running demo
 
-git clone https://github.com/aditosoftware/vaadin-history-api
-mvn clean install
-cd demo
-mvn jetty:run
-
-To see the demo, navigate to http://localhost:8080/
-
-
-## Issue tracking
-
-The issues for this add-on are tracked on its github.com page. All bug reports and feature requests are appreciated. 
-
-## Contributions
-
-Contributions are welcome, but there are no guarantees that they are accepted as such. Process for contributing is the following:
-- Fork this project
-- Create an issue to this project about the contribution (bug or feature) if there is no such issue about it already. Try to keep the scope minimal.
-- Develop and test the fix or functionality carefully. Only include minimum amount of code needed to fix the issue.
-- Refer to the fixed issue in commit
-- Send a pull request for the original project
-- Comment on the original issue that you have implemented a fix for it
-
-## License & Author
-
-Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
-
-# Developer Guide
-
-## Getting started
-
-Here is a simple example on how to try out the add-on component:
+# Getting started
+Here is a simple example on how to try out the add-on:
 
 ```java
 // Register the HistoryAPI on your current UI.
@@ -56,3 +26,12 @@ historyAPI.replaceState("/replace/1");
 ```
 
 For a more comprehensive example, see [DemoUI](src/main/java/de/aditosoftware/vaadin/addon/historyapi/demo/DemoUI.java)
+
+# Building and running demo
+
+git clone https://github.com/aditosoftware/vaadin-history-api
+mvn clean install
+cd demo
+mvn jetty:run
+
+To see the demo, navigate to http://localhost:8080/
