@@ -4,9 +4,9 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
 import de.aditosoftware.vaadin.addon.historyapi.HistoryAPIExtension;
+import de.aditosoftware.vaadin.addon.historyapi.client.accessor.ClientPopStateEvent;
 import de.aditosoftware.vaadin.addon.historyapi.client.accessor.DelegatingClientRpc;
 import de.aditosoftware.vaadin.addon.historyapi.client.accessor.HistoryAPINativeAccessor;
-import de.aditosoftware.vaadin.addon.historyapi.client.accessor.ClientPopStateEvent;
 import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryAPIClientRpc;
 import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryAPIServerRpc;
 
@@ -21,6 +21,9 @@ public class HistoryAPIConnector extends AbstractExtensionConnector {
 
     // Register the Client RPC.
     registerClientRpc(nativeAccessor);
+
+    registerPopStateListener(nativeAccessor);
+
   }
 
   @Override
@@ -45,5 +48,14 @@ public class HistoryAPIConnector extends AbstractExtensionConnector {
    */
   private void sendPopStateEvent(ClientPopStateEvent pClientPopStateEvent) {
     getRpcProxy(HistoryAPIServerRpc.class).onPopState(pClientPopStateEvent);
+  }
+
+  /**
+   * Will register a new PopState listener using the given native accessor.
+   *
+   * @param accessor The native accessor on which the listener should be registered.
+   */
+  private void registerPopStateListener(HistoryAPINativeAccessor accessor) {
+    accessor.registerPopStateListener(this::sendPopStateEvent);
   }
 }
