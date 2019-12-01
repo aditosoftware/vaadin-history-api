@@ -114,7 +114,7 @@
               <!-- Package format version - do not change -->
               <Vaadin-Package-Version>1</Vaadin-Package-Version>
               <Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
-              <Vaadin-Widgetsets>de.aditosoftware.vaadin.addon.WidgetSet</Vaadin-Widgetsets>
+              <Vaadin-Widgetsets>de.aditosoftware.vaadin.addon.historyapi.WidgetSet</Vaadin-Widgetsets>
             </manifestEntries>
           </archive>
         </configuration>
