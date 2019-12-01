@@ -46,12 +46,12 @@ public class DemoUI extends UI {
 
     Button pushButton = new Button("Push state");
     pushButton.addClickListener(
-        event -> historyAPI.pushState((String) null, null, "/push/" + counter.getAndIncrement()));
+        event -> historyAPI.pushState("/push/" + counter.getAndIncrement()));
     layout.addComponent(pushButton);
 
     Button replaceButton = new Button("Replace state");
     replaceButton.addClickListener(event -> historyAPI
-        .replaceState((String) null, null, "/replace/" + counter.getAndIncrement()));
+        .replaceState("/replace/" + counter.getAndIncrement()));
     layout.addComponent(replaceButton);
 
     Button backButton = new Button("Back");

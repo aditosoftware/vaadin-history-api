@@ -51,25 +51,25 @@ public class HistoryAPIExtension extends AbstractExtension implements HistoryAPI
   }
 
   @Override
-  public void pushState(@Nullable Map<String, String> pState, @Nullable String pTitle,
-      @NotNull String pURL) {
+  public void pushState(@NotNull String pURL, @Nullable Map<String, String> pState,
+      @Nullable String pTitle) {
     getProxy().pushState(encodeMap(pState), pTitle, pURL);
   }
 
   @Override
-  public void pushState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
+  public void pushState(@NotNull String pURL, @Nullable String pState, @Nullable String pTitle) {
     getProxy().pushState(encodeString(pState), pTitle, pURL);
   }
 
   @Override
-  public void replaceState(@Nullable Map<String, String> pState, @Nullable String pTitle,
-      @NotNull String pURL) {
+  public void replaceState(@NotNull String pURL, @Nullable Map<String, String> pState,
+      @Nullable String pTitle) {
     getProxy().replaceState(encodeMap(pState), pTitle, pURL);
   }
 
   @Override
-  public void replaceState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
-    getProxy().pushState(encodeString(pState), pTitle, pURL);
+  public void replaceState(@NotNull String pURL, @Nullable String pState, @Nullable String pTitle) {
+    getProxy().replaceState(encodeString(pState), pTitle, pURL);
   }
 
   @NotNull

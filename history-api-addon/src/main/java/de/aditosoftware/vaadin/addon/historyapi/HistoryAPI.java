@@ -3,10 +3,9 @@ package de.aditosoftware.vaadin.addon.historyapi;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
 import de.aditosoftware.vaadin.addon.historyapi.event.PopStateListener;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
 
 /**
  * Describes all capabilities of the History API. This is intended to mimic the actual HTML5 History
@@ -43,6 +42,26 @@ public interface HistoryAPI {
    */
   void forward();
 
+
+  /**
+   * Pushes the given state, title and URL onto the history.
+   *
+   * @param pURL The URL.
+   */
+  default void pushState(@NotNull String pURL) {
+    pushState(pURL, (String) null, null);
+  }
+
+  /**
+   * Pushes the given state, title and URL onto the history.
+   *
+   * @param pURL   The URL.
+   * @param pState The state, which will be encoded using a JSON serializer.
+   */
+  default void pushState(@NotNull String pURL, @Nullable Map<String, String> pState) {
+    pushState(pURL, pState, null);
+  }
+
   /**
    * Pushes the given state, title and URL onto the history.
    *
@@ -50,8 +69,18 @@ public interface HistoryAPI {
    * @param pTitle The title, which will mostly not picked up by most browsers.
    * @param pURL   The URL.
    */
-  void pushState(@Nullable Map<String, String> pState, @Nullable String pTitle,
-      @NotNull String pURL);
+  void pushState(@NotNull String pURL, @Nullable Map<String, String> pState,
+      @Nullable String pTitle);
+
+  /**
+   * Pushes the given state, title, and URL onto the history.
+   *
+   * @param pURL   the URL.
+   * @param pState The state.
+   */
+  default void pushState(@NotNull String pURL, @Nullable String pState) {
+    pushState(pURL, pState, null);
+  }
 
   /**
    * Pushes the given state, title, and URL onto the history.
@@ -60,7 +89,26 @@ public interface HistoryAPI {
    * @param pTitle The title, which will mostly not picked up by most browser.
    * @param pURL   the URL.
    */
-  void pushState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL);
+  void pushState(@NotNull String pURL, @Nullable String pState, @Nullable String pTitle);
+
+  /**
+   * Will replace the current state with the given state, title and URL.
+   *
+   * @param pURL The URL.
+   */
+  default void replaceState(@NotNull String pURL) {
+    replaceState(pURL, (String) null, null);
+  }
+
+  /**
+   * Will replace the current state with the given state, title and URL.
+   *
+   * @param pURL   The URL.
+   * @param pState The state, which will be encoded using a JSON serializer.
+   */
+  default void replaceState(@NotNull String pURL, @Nullable Map<String, String> pState) {
+    replaceState(pURL, pState, null);
+  }
 
   /**
    * Will replace the current state with the given state, title and URL.
@@ -69,8 +117,18 @@ public interface HistoryAPI {
    * @param pTitle The title, which will mostly not picked up by most browsers.
    * @param pURL   The URL.
    */
-  void replaceState(@Nullable Map<String, String> pState, @Nullable String pTitle,
-      @NotNull String pURL);
+  void replaceState(@NotNull String pURL, @Nullable Map<String, String> pState,
+      @Nullable String pTitle);
+
+  /**
+   * Will replace the current state with the given state, title and URL.
+   *
+   * @param pURL   The URL.
+   * @param pState The state.
+   */
+  default void replaceState(@NotNull String pURL, @Nullable String pState) {
+    replaceState(pURL, pState, null);
+  }
 
   /**
    * Will replace the current state with the given state, title and URL.
@@ -79,7 +137,7 @@ public interface HistoryAPI {
    * @param pTitle The title, which will mostly not picked up by most browsers
    * @param pURL   The URL.
    */
-  void replaceState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL);
+  void replaceState(@NotNull String pURL, @Nullable String pState, @Nullable String pTitle);
 
   /**
    * Will register an listener which will be called when the history changes on the client-side.
