@@ -36,8 +36,8 @@ public class HistoryAPINativeAccessor {
    */
   public native void registerPopStateListener(Consumer<ClientPopStateEvent> listenerCallback) /*-{
     $wnd.addEventListener('popstate', function (ev) {
-      var event = this.@HistoryAPINativeAccessor::createPopStateEvent(*)($doc.location, ev.state)
-      listenerCallback.@Consumer::accept(*)(event)
+      this.@HistoryAPINativeAccessor::createPopStateEvent(*)(listenerCallback, $doc.location.href,
+          ev.state)
     }.bind(this))
   }-*/;
 
@@ -48,8 +48,10 @@ public class HistoryAPINativeAccessor {
    * @param pState The state of the history.
    * @return The PopState event.
    */
-  private ClientPopStateEvent createPopStateEvent(String pUri, String pState) {
-    return new ClientPopStateEvent(pUri, pState);
+  private void createPopStateEvent(Consumer<ClientPopStateEvent> callback, String pUri,
+      String pState) {
+    ClientPopStateEvent event = new ClientPopStateEvent(pUri, pState);
+    callback.accept(event);
   }
 }
 
