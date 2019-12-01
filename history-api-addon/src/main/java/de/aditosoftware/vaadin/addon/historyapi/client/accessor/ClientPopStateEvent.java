@@ -1,13 +1,15 @@
 package de.aditosoftware.vaadin.addon.historyapi.client.accessor;
 
+import java.io.Serializable;
+
 /**
  * Represents an PopState event for the client-side. This holds the state received by the event and
  * the URI at the moment the event occurs.
  */
-public class ClientPopStateEvent {
+public class ClientPopStateEvent implements Serializable {
 
-  private String uri;
-  private String state;
+  public String uri;
+  public String state;
 
   /**
    * Required zero-args constructor.
