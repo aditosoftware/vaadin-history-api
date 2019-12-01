@@ -1,10 +1,7 @@
-# MyComponent Add-on for Vaadin 8
+# History API Add-on for Vaadin 8
 
-${ComponentClassName} is a UI component add-on for Vaadin 8.
-
-## Online demo
-
-Try the add-on demo at <url of the online demo>
+This add-on provides the full [History API](https://html.spec.whatwg.org/multipage/history.html#the-history-interface) on the server-side, including  a [PopState event](https://html.spec.whatwg.org/multipage/browsing-the-web.html#the-popstateevent-interface) listener.
+This exists because the [Vaadin implementation](https://github.com/vaadin/framework/blob/master/server/src/main/java/com/vaadin/server/Page.java#L365) of the PopState listener provides insufficient information.    
 
 ## Download release
 
@@ -12,54 +9,13 @@ Official releases of this add-on are available at Vaadin Directory. For Maven in
 
 ## Building and running demo
 
-git clone <url of the MyComponent repository>
+git clone https://github.com/aditosoftware/vaadin-history-api
 mvn clean install
 cd demo
 mvn jetty:run
 
 To see the demo, navigate to http://localhost:8080/
 
-## Development with Eclipse IDE
-
-For further development of this add-on, the following tool-chain is recommended:
-- Eclipse IDE
-- m2e wtp plug-in (install it from Eclipse Marketplace)
-- Vaadin Eclipse plug-in (install it from Eclipse Marketplace)
-- JRebel Eclipse plug-in (install it from Eclipse Marketplace)
-- Chrome browser
-
-### Importing project
-
-Choose File > Import... > Existing Maven Projects
-
-Note that Eclipse may give "Plugin execution not covered by lifecycle configuration" errors for pom.xml. Use "Permanently mark goal resources in pom.xml as ignored in Eclipse build" quick-fix to mark these errors as permanently ignored in your project. Do not worry, the project still works fine. 
-
-### Debugging server-side
-
-If you have not already compiled the widgetset, do it now by running vaadin:install Maven target for history-api-root project.
-
-If you have a JRebel license, it makes on the fly code changes faster. Just add JRebel nature to your history-api-demo project by clicking project with right mouse button and choosing JRebel > Add JRebel Nature
-
-To debug project and make code modifications on the fly in the server-side, right-click the history-api-demo project and choose Debug As > Debug on Server. Navigate to http://localhost:8080/history-api-demo/ to see the application.
-
-### Debugging client-side
-
-Debugging client side code in the history-api-demo project:
-  - run "mvn vaadin:run-codeserver" on a separate console while the application is running
-  - activate Super Dev Mode in the debug window of the application or by adding ?superdevmode to the URL
-  - You can access Java-sources and set breakpoints inside Chrome if you enable source maps from inspector settings.
- 
-## Release notes
-
-### Version 1.0-SNAPSHOT
-- ...
-- ...
-
-## Roadmap
-
-This component is developed as a hobby with no public roadmap or any guarantees of upcoming releases. That said, the following features are planned for upcoming releases:
-- ...
-- ...
 
 ## Issue tracking
 
@@ -79,32 +35,24 @@ Contributions are welcome, but there are no guarantees that they are accepted as
 
 Add-on is distributed under Apache License 2.0. For license terms, see LICENSE.txt.
 
-MyComponent is written by <...>
-
 # Developer Guide
 
 ## Getting started
 
 Here is a simple example on how to try out the add-on component:
 
-<...>
+```java
+// Register the HistoryAPI on your current UI.
+HistoryAPI historyAPI = HistoryAPI.forUI(UI.getCurrent());
 
-For a more comprehensive example, see src/test/java/org/vaadin/template/demo/DemoUI.java
+// Add a PopState listener.
+historyAPI.addPopStateListener(event -> System.out.println(event.getUri().toString()));
 
-## Features
+// Push a new state, with URI "/push/1".
+historyAPI.pushState("/push/1");
 
-### Feature A
+// Replace current state, with URI "/replace/1". 
+historyAPI.replaceState("/replace/1");
+```
 
-<...>
-
-### Feature B
-
-<...>
-
-### Feature C
-
-<...>
-
-## API
-
-MyComponent JavaDoc is available online at <...>
+For a more comprehensive example, see [DemoUI](src/main/java/de/aditosoftware/vaadin/addon/historyapi/demo/DemoUI.java)
