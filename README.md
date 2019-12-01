@@ -8,7 +8,7 @@ This exists because the [Vaadin implementation](https://github.com/vaadin/framew
 Official releases of this add-on are available at Vaadin Directory. For Maven instructions, download and reviews, go to https://vaadin.com/addon/history-api
 
 
-# Getting started
+## Getting started
 Here is a simple example on how to try out the add-on:
 
 ```java
@@ -29,9 +29,9 @@ For a more comprehensive example, see [DemoUI](src/main/java/de/aditosoftware/va
 
 # Building and running demo
 
-git clone https://github.com/aditosoftware/vaadin-history-api
-mvn clean install
-cd demo
-mvn jetty:run
+- git clone https://github.com/aditosoftware/vaadin-history-api
+- mvn clean install
+- cd history-api-demo
+- mvn jetty:run
 
 To see the demo, navigate to http://localhost:8080/
