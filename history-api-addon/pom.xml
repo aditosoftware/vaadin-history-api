@@ -7,7 +7,7 @@
   <artifactId>history-api</artifactId>
   <packaging>jar</packaging>
   <version>1.0.0</version>
-  <name>History API Add-on</name>
+  <name>History API</name>
 
   <prerequisites>
     <maven>3</maven>
