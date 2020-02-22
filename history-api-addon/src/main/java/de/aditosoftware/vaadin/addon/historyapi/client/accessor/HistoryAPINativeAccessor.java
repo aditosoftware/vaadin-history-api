@@ -35,9 +35,13 @@ public class HistoryAPINativeAccessor {
    * @param listenerCallback The callback which receives the event.
    */
   public native void registerPopStateListener(Consumer<ClientPopStateEvent> listenerCallback) /*-{
-    $wnd.addEventListener('popstate', function (ev) {
-      this.@HistoryAPINativeAccessor::createPopStateEvent(*)(listenerCallback, $doc.location.href,
-          ev.state)
+//    $wnd.addEventListener('popstate', function (ev) {
+//      this.@HistoryAPINativeAccessor::createPopStateEvent(*)(listenerCallback, $doc.location.href,
+//          ev.state)
+//    }.bind(this))
+
+    $wnd.addEventListener('hashchange', function (ev) {
+      this.@HistoryAPINativeAccessor::createPopStateEvent(*)(listenerCallback, $doc.location.href, null)
     }.bind(this))
   }-*/;
 

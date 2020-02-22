@@ -1,5 +1,6 @@
 package de.aditosoftware.vaadin.addon.historyapi;
 
+import com.vaadin.server.Extension;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.UI;
 import de.aditosoftware.vaadin.addon.historyapi.event.PopStateListener;
@@ -11,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
  * Describes all capabilities of the History API. This is intended to mimic the actual HTML5 History
  * API. See https://html.spec.whatwg.org/multipage/history.html#the-history-interface
  */
-public interface HistoryAPI {
+public interface HistoryAPI extends Extension {
 
   /**
    * Will create a new HistoryAPI instance for the given {@link UI}. The Extension will
