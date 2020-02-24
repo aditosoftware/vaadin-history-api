@@ -8,23 +8,23 @@ import java.util.function.Consumer;
  */
 public class HistoryAPINativeAccessor {
 
-  public native void pushState(String pState, String pTitle, String pURL) /*-{
+  public static native void pushState(String pState, String pTitle, String pURL) /*-{
     $wnd.history.pushState(JSON.parse(pState), pTitle, pURL);
   }-*/;
 
-  public native void replaceState(String pState, String pTitle, String pURL) /*-{
+  public static native void replaceState(String pState, String pTitle, String pURL) /*-{
     $wnd.history.replaceState(JSON.parse(pState), pTitle, pURL);
   }-*/;
 
-  public native void go(int pDelta) /*-{
+  public static native void go(int pDelta) /*-{
     $wnd.history.go(pDelta);
   }-*/;
 
-  public native void back() /*-{
+  public static native void back() /*-{
     $wnd.history.back()
   }-*/;
 
-  public native void forward() /*-{
+  public static native void forward() /*-{
     $wnd.history.forward()
   }-*/;
 

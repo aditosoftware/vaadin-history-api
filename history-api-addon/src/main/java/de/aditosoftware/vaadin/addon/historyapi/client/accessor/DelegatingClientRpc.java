@@ -31,35 +31,35 @@ public class DelegatingClientRpc implements HistoryAPIClientRpc {
   @Override
   public void go(int pDelta) {
     if (accessor != null) {
-      accessor.go(pDelta);
+      HistoryAPINativeAccessor.go(pDelta);
     }
   }
 
   @Override
   public void back() {
     if (accessor != null) {
-      accessor.back();
+      HistoryAPINativeAccessor.back();
     }
   }
 
   @Override
   public void forward() {
     if (accessor != null) {
-      accessor.forward();
+      HistoryAPINativeAccessor.forward();
     }
   }
 
   @Override
   public void pushState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
     if (accessor != null) {
-      accessor.pushState(pState, pTitle, pURL);
+      HistoryAPINativeAccessor.pushState(pState, pTitle, pURL);
     }
   }
 
   @Override
   public void replaceState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
     if (accessor != null) {
-      accessor.replaceState(pState, pTitle, pURL);
+      HistoryAPINativeAccessor.replaceState(pState, pTitle, pURL);
     }
   }
 }

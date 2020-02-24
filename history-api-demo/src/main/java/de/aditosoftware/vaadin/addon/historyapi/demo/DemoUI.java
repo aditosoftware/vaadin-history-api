@@ -1,18 +1,22 @@
 package de.aditosoftware.vaadin.addon.historyapi.demo;
 
+import com.sun.tools.javac.util.List;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.renderers.TextRenderer;
 import de.aditosoftware.vaadin.addon.historyapi.HistoryAPI;
-import de.aditosoftware.vaadin.addon.historyapi.HistoryLinkWrapper;
+import de.aditosoftware.vaadin.addon.historyapi.component.HistoryLink;
+import de.aditosoftware.vaadin.addon.historyapi.renderer.HistoryLinkData;
+import de.aditosoftware.vaadin.addon.historyapi.renderer.HistoryLinkRenderer;
 
 import javax.servlet.annotation.WebServlet;
+import java.net.URI;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Theme("demo")
@@ -42,8 +46,8 @@ public class DemoUI extends UI {
     buttonLayout.setMargin(false);
     buttonLayout.setSpacing(false);
 
-    final HorizontalLayout mainLayout = new HorizontalLayout(buttonLayout, linkLayout);
-    mainLayout.setWidth(50, Unit.PERCENTAGE);
+    final VerticalLayout mainLayout = new VerticalLayout(buttonLayout, linkLayout);
+    mainLayout.setWidth(100, Unit.PERCENTAGE);
     buttonLayout.setMargin(false);
     buttonLayout.setSpacing(false);
 
@@ -73,8 +77,49 @@ public class DemoUI extends UI {
     forwardButton.addClickListener(event -> historyAPI.forward());
     buttonLayout.addComponent(forwardButton);
 
-    HistoryLinkWrapper linkWrapper = new HistoryLinkWrapper(new ExternalResource("/client/"), new Label("TEST!"), historyAPI);
+    HistoryLink linkWrapper = new HistoryLink(new Label("TEST!"), URI.create("/client"));
+    linkWrapper.addLinkClickListener(event -> {
+      Notification.show("History changed through HistoryLink", event.getLinkURI().toString(), Type.HUMANIZED_MESSAGE);
+    });
 
     mainLayout.addComponent(linkWrapper);
+    mainLayout.addComponent(createTestGrid());
+  }
+
+  private Grid<TestGridData> createTestGrid () {
+    Grid<TestGridData> grid = new Grid<>();
+
+    HistoryLinkRenderer linkRenderer = new HistoryLinkRenderer();
+    linkRenderer.addLinkClickListener(event -> {
+      Notification.show("History changed through HistoryLinkRenderer", event.getLinkURI().toString(), Type.HUMANIZED_MESSAGE);
+    });
+
+    grid.addColumn(TestGridData::getText, new TextRenderer());
+    grid.addColumn(TestGridData::getLinkData, linkRenderer);
+
+    grid.setItems(List.of(
+        new TestGridData("first", new HistoryLinkData("first link", URI.create("/client/first"))),
+        new TestGridData("second", new HistoryLinkData("second link", URI.create("/client/second")))
+    ));
+
+    return grid;
+  }
+
+  private class TestGridData {
+    public String text;
+    public HistoryLinkData linkData;
+
+    public TestGridData (String text, HistoryLinkData linkData) {
+      this.text = text;
+      this.linkData = linkData;
+    }
+
+    public String getText () {
+      return text;
+    }
+
+    public HistoryLinkData getLinkData () {
+      return linkData;
+    }
   }
 }
