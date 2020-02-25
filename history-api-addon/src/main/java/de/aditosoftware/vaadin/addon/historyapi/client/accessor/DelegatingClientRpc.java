@@ -9,57 +9,28 @@ import org.jetbrains.annotations.Nullable;
  * accessor.
  */
 public class DelegatingClientRpc implements HistoryAPIClientRpc {
-
-  private final transient HistoryAPINativeAccessor accessor;
-
-  /**
-   * Required zero-args constructor.
-   */
-  public DelegatingClientRpc() {
-    accessor = null;
-  }
-
-  /**
-   * Constructor which accepts the required {@link HistoryAPINativeAccessor}.
-   *
-   * @param pAccessor The native accessor.
-   */
-  public DelegatingClientRpc(@NotNull HistoryAPINativeAccessor pAccessor) {
-    accessor = pAccessor;
+  @Override
+  public void go (int pDelta) {
+    HistoryAPINativeAccessor.go(pDelta);
   }
 
   @Override
-  public void go(int pDelta) {
-    if (accessor != null) {
-      HistoryAPINativeAccessor.go(pDelta);
-    }
+  public void back () {
+    HistoryAPINativeAccessor.back();
   }
 
   @Override
-  public void back() {
-    if (accessor != null) {
-      HistoryAPINativeAccessor.back();
-    }
+  public void forward () {
+    HistoryAPINativeAccessor.forward();
   }
 
   @Override
-  public void forward() {
-    if (accessor != null) {
-      HistoryAPINativeAccessor.forward();
-    }
+  public void pushState (@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
+    HistoryAPINativeAccessor.pushState(pState, pTitle, pURL);
   }
 
   @Override
-  public void pushState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
-    if (accessor != null) {
-      HistoryAPINativeAccessor.pushState(pState, pTitle, pURL);
-    }
-  }
-
-  @Override
-  public void replaceState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
-    if (accessor != null) {
-      HistoryAPINativeAccessor.replaceState(pState, pTitle, pURL);
-    }
+  public void replaceState (@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
+    HistoryAPINativeAccessor.replaceState(pState, pTitle, pURL);
   }
 }

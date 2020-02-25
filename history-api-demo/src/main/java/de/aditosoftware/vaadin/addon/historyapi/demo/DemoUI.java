@@ -11,9 +11,8 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.renderers.TextRenderer;
 import de.aditosoftware.vaadin.addon.historyapi.HistoryAPI;
-import de.aditosoftware.vaadin.addon.historyapi.component.HistoryLink;
-import de.aditosoftware.vaadin.addon.historyapi.renderer.HistoryLinkData;
-import de.aditosoftware.vaadin.addon.historyapi.renderer.HistoryLinkRenderer;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryLink;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryLinkRenderer;
 
 import javax.servlet.annotation.WebServlet;
 import java.net.URI;
@@ -35,6 +34,7 @@ public class DemoUI extends UI {
   protected void init (VaadinRequest request) {
     HistoryAPI historyAPI = HistoryAPI.forUI(UI.getCurrent());
 
+
     final VerticalLayout linkLayout = new VerticalLayout();
     linkLayout.setWidth(25, Unit.PERCENTAGE);
     linkLayout.setMargin(false);
@@ -53,8 +53,8 @@ public class DemoUI extends UI {
 
     setContent(mainLayout);
 
-    historyAPI.addPopStateListener(event -> {
-      Notification.show("History changed", event.getUri().toString(), Type.HUMANIZED_MESSAGE);
+    historyAPI.addHistoryChangeListener(event -> {
+      Notification.show("History changed " + event.getOrigin().name(), event.getURI().toString(), Type.HUMANIZED_MESSAGE);
     });
 
     AtomicInteger counter = new AtomicInteger(1);
@@ -77,29 +77,23 @@ public class DemoUI extends UI {
     forwardButton.addClickListener(event -> historyAPI.forward());
     buttonLayout.addComponent(forwardButton);
 
-    HistoryLink linkWrapper = new HistoryLink(new Label("TEST!"), URI.create("/client"));
-    linkWrapper.addLinkClickListener(event -> {
-      Notification.show("History changed through HistoryLink", event.getLinkURI().toString(), Type.HUMANIZED_MESSAGE);
-    });
+    HistoryLink linkWrapper = new HistoryLink(new Label("TEST!"), URI.create("/client"), historyAPI);
 
     mainLayout.addComponent(linkWrapper);
-    mainLayout.addComponent(createTestGrid());
+    mainLayout.addComponent(createTestGrid(historyAPI));
   }
 
-  private Grid<TestGridData> createTestGrid () {
+  private Grid<TestGridData> createTestGrid (HistoryAPI historyAPI) {
     Grid<TestGridData> grid = new Grid<>();
 
-    HistoryLinkRenderer linkRenderer = new HistoryLinkRenderer();
-    linkRenderer.addLinkClickListener(event -> {
-      Notification.show("History changed through HistoryLinkRenderer", event.getLinkURI().toString(), Type.HUMANIZED_MESSAGE);
-    });
+    HistoryLinkRenderer linkRenderer = new HistoryLinkRenderer(historyAPI);
 
     grid.addColumn(TestGridData::getText, new TextRenderer());
     grid.addColumn(TestGridData::getLinkData, linkRenderer);
 
     grid.setItems(List.of(
-        new TestGridData("first", new HistoryLinkData("first link", URI.create("/client/first"))),
-        new TestGridData("second", new HistoryLinkData("second link", URI.create("/client/second")))
+        new TestGridData("first", new HistoryLinkRenderer.Data("first link", URI.create("/client/first"))),
+        new TestGridData("second", new HistoryLinkRenderer.Data("second link", URI.create("/client/second")))
     ));
 
     return grid;
@@ -107,9 +101,9 @@ public class DemoUI extends UI {
 
   private class TestGridData {
     public String text;
-    public HistoryLinkData linkData;
+    public HistoryLinkRenderer.Data linkData;
 
-    public TestGridData (String text, HistoryLinkData linkData) {
+    public TestGridData (String text, HistoryLinkRenderer.Data linkData) {
       this.text = text;
       this.linkData = linkData;
     }
@@ -118,7 +112,7 @@ public class DemoUI extends UI {
       return text;
     }
 
-    public HistoryLinkData getLinkData () {
+    public HistoryLinkRenderer.Data getLinkData () {
       return linkData;
     }
   }

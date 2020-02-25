@@ -1,4 +1,4 @@
-package de.aditosoftware.vaadin.addon.historyapi.client.link;
+package de.aditosoftware.vaadin.addon.historyapi.client.connector;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.vaadin.client.ComponentConnector;
@@ -6,13 +6,17 @@ import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractSingleComponentContainerConnector;
 import com.vaadin.shared.ui.Connect;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryLink;
 import de.aditosoftware.vaadin.addon.historyapi.client.accessor.HistoryAPINativeAccessor;
-import de.aditosoftware.vaadin.addon.historyapi.client.link.event.ClientLinkClickEvent;
-import de.aditosoftware.vaadin.addon.historyapi.client.link.rpc.HistoryLinkServerRpc;
-import de.aditosoftware.vaadin.addon.historyapi.component.HistoryLink;
+import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeEvent;
+import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeOrigin;
+import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkState;
+import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkWidget;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryChangeServerRpc;
+import org.jetbrains.annotations.NotNull;
 
 @Connect(HistoryLink.class)
-public class HistoryLinkConnector extends AbstractSingleComponentContainerConnector {
+public class HistoryLinkConnector extends AbstractSingleComponentContainerConnector implements HistoryChangeAwareConnector {
   @Override
   public HistoryLinkWidget getWidget () {
     return (HistoryLinkWidget) super.getWidget();
@@ -61,6 +65,11 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
   public void updateCaption (ComponentConnector connector) {
   }
 
+  @Override
+  public @NotNull HistoryChangeServerRpc getHistoryChangeServerRpc () {
+    return getRpcProxy(HistoryChangeServerRpc.class);
+  }
+
   /**
    * Will be called when the element of the widget has been clicked by the user.
    *
@@ -76,11 +85,6 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
     event.preventDefault();
 
     HistoryAPINativeAccessor.pushState(null, null, getState().uri);
-    getRpcProxy(HistoryLinkServerRpc.class).onLinkClick(createLinkClickEvent());
-
-  }
-
-  private ClientLinkClickEvent createLinkClickEvent () {
-    return new ClientLinkClickEvent(getState().uri);
+    handleHistoryChange(new ClientHistoryChangeEvent(getState().uri, null, ClientHistoryChangeOrigin.ANCHOR));
   }
 }
