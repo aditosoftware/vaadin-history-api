@@ -11,7 +11,8 @@ import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryChangeServerRp
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Represents a connector for a extension.
+ * Represents the connector for the {@link HistoryAPI} extension.
+ * This handles the server-to-client communication for the History API commands.
  */
 @Connect(HistoryAPI.class)
 public class HistoryAPIConnector extends AbstractExtensionConnector implements HistoryChangeAwareConnector {
@@ -28,6 +29,11 @@ public class HistoryAPIConnector extends AbstractExtensionConnector implements H
     // Is not required as this is no component extension.
   }
 
+  @Override
+  public @Nullable HistoryChangeServerRpc getHistoryChangeServerRpc () {
+    return getRpcProxy(HistoryChangeServerRpc.class);
+  }
+
   /**
    * Will register the client PRC which uses {@link DelegatingClientRpc} to
    * delegate to the native accessor for the HTML5 History API.
@@ -41,10 +47,5 @@ public class HistoryAPIConnector extends AbstractExtensionConnector implements H
    */
   private void registerPopStateListener () {
     HistoryAPINativeAccessor.registerPopStateListener(this::handleHistoryChange);
-  }
-
-  @Override
-  public @Nullable HistoryChangeServerRpc getHistoryChangeServerRpc () {
-    return getRpcProxy(HistoryChangeServerRpc.class);
   }
 }

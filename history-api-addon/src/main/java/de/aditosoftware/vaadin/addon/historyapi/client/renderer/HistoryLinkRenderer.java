@@ -6,7 +6,7 @@ import com.vaadin.client.renderers.Renderer;
 import com.vaadin.client.renderers.TextRenderer;
 import com.vaadin.client.renderers.WidgetRenderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
-import de.aditosoftware.vaadin.addon.historyapi.client.accessor.HistoryAPINativeAccessor;
+import de.aditosoftware.vaadin.addon.historyapi.client.util.HistoryLinkUtil;
 import elemental.json.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,16 +50,8 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, Anchor> {
    * @param event The click event.
    */
   private void handleAnchorClick (String uri, ClickEvent event) {
-    if (event.isMetaKeyDown()
-        || event.isAltKeyDown()
-        || event.isControlKeyDown()
-        || event.isShiftKeyDown())
-      return;
-
-    event.preventDefault();
-
-    HistoryAPINativeAccessor.pushState(null, null, uri);
-    clickCallback.accept(uri);
+    if (HistoryLinkUtil.handleAnchorClick(uri, event))
+      clickCallback.accept(uri);
   }
 
   /**

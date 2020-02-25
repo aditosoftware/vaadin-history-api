@@ -31,6 +31,15 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
     registerRpc(this::handleHistoryChangeEvent, HistoryChangeServerRpc.class);
   }
 
+  public HistoryLink (@NotNull String caption, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
+    this.historyAPI = historyAPI;
+    setContent(null);
+    setURI(uri);
+    setCaption(caption);
+
+    registerRpc(this::handleHistoryChangeEvent, HistoryChangeServerRpc.class);
+  }
+
   @Override
   protected HistoryLinkState getState () {
     return (HistoryLinkState) super.getState();
@@ -90,5 +99,4 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
 
     fireEvent(event);
   }
-
 }

@@ -5,6 +5,7 @@ import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
@@ -77,7 +78,8 @@ public class DemoUI extends UI {
     forwardButton.addClickListener(event -> historyAPI.forward());
     buttonLayout.addComponent(forwardButton);
 
-    HistoryLink linkWrapper = new HistoryLink(new Label("TEST!"), URI.create("/client"), historyAPI);
+    HistoryLink linkWrapper = new HistoryLink("TEST!", URI.create("/client"), historyAPI);
+    linkWrapper.setIcon(VaadinIcons.ANCHOR);
 
     mainLayout.addComponent(linkWrapper);
     mainLayout.addComponent(createTestGrid(historyAPI));

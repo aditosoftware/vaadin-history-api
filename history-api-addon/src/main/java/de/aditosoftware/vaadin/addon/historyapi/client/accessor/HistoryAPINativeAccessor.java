@@ -6,11 +6,10 @@ import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChange
 import java.util.function.Consumer;
 
 /**
- * Represents an accessor which uses native GWT code to access the HTML5 History API without the GWT
- * layer.
+ * Represents an accessor which uses native GWT code to access the HTML5
+ * History API without the GWT layer.
  */
 public class HistoryAPINativeAccessor {
-
   public static native void pushState (String pState, String pTitle, String pURL) /*-{
     $wnd.history.pushState(JSON.parse(pState), pTitle, pURL);
   }-*/;
@@ -39,7 +38,7 @@ public class HistoryAPINativeAccessor {
    */
   public static native void registerPopStateListener (Consumer<ClientHistoryChangeEvent> listenerCallback) /*-{
     $wnd.addEventListener('popstate', function (ev) {
-      @HistoryAPINativeAccessor::processEvent(*)(listenerCallback, $doc.location.href, null)
+      @HistoryAPINativeAccessor::processEvent(*)(listenerCallback, $doc.location.href, ev.state)
     }.bind(this))
   }-*/;
 
