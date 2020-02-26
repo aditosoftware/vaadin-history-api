@@ -95,7 +95,9 @@ public class DemoUI extends UI {
 
     grid.setItems(List.of(
         new TestGridData("first", new HistoryLinkRenderer.Data("first link", URI.create("/client/first"))),
-        new TestGridData("second", new HistoryLinkRenderer.Data("second link", URI.create("/client/second")))
+        new TestGridData("second", new HistoryLinkRenderer.Data("second link", URI.create("/client/second"))),
+        new TestGridData("third", new HistoryLinkRenderer.Data("second link", null)),
+        new TestGridData("fourth", null)
     ));
 
     return grid;
