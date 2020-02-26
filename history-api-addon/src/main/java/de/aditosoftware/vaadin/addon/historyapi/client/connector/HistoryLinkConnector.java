@@ -103,8 +103,9 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
       if (getWidget().icon != null) {
         if (!getWidget().getElement().isOrHasChild(getWidget().icon.getElement()))
           getWidget().getElement().insertBefore(getWidget().icon.getElement(), getWidget().captionElement);
-      } else
+      } else {
         getWidget().getElement().removeChild(getWidget().icon.getElement());
+      }
     } else {
       // If there is a children component it will be set as widget of the panel.
       getWidget().setWidget(getChildComponents().get(0).getWidget());
