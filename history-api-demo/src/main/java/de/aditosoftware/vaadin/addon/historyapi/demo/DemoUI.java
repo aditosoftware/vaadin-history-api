@@ -81,7 +81,10 @@ public class DemoUI extends UI {
     HistoryLink linkWrapper = new HistoryLink("TEST!", URI.create("/client"), historyAPI);
     linkWrapper.setIcon(VaadinIcons.ANCHOR);
 
-    mainLayout.addComponent(linkWrapper);
+    Button focusButton = new Button("Focus link above");
+    focusButton.addClickListener(event -> linkWrapper.focus());
+
+    mainLayout.addComponents(linkWrapper, focusButton);
     mainLayout.addComponent(createTestGrid(historyAPI));
   }
 
