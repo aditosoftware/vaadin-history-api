@@ -17,6 +17,8 @@ import de.aditosoftware.vaadin.addon.historyapi.HistoryLinkRenderer;
 
 import javax.servlet.annotation.WebServlet;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Theme("demo")
@@ -56,6 +58,7 @@ public class DemoUI extends UI {
 
     historyAPI.addHistoryChangeListener(event -> {
       Notification.show("History changed " + event.getOrigin().name(), event.getURI().toString(), Type.HUMANIZED_MESSAGE);
+      System.out.println(event.getState());
     });
 
     AtomicInteger counter = new AtomicInteger(1);
@@ -77,6 +80,17 @@ public class DemoUI extends UI {
     Button forwardButton = new Button("Forward");
     forwardButton.addClickListener(event -> historyAPI.forward());
     buttonLayout.addComponent(forwardButton);
+
+    Button pushWithStateButton = new Button("Push state (with state object)");
+    pushWithStateButton.addClickListener(event -> {
+      int incremented = counter.getAndIncrement();
+
+      Map<String, String> state = new HashMap<>();
+      state.put("counter", "" + incremented);
+
+      historyAPI.pushState("/push/" + incremented, state);
+    });
+    buttonLayout.addComponent(pushWithStateButton);
 
     HistoryLink linkWrapper = new HistoryLink("TEST!", URI.create("/client"), historyAPI);
     linkWrapper.setIcon(VaadinIcons.ANCHOR);
