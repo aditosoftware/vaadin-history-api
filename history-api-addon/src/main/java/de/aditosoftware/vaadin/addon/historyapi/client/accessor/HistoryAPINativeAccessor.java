@@ -38,7 +38,12 @@ public class HistoryAPINativeAccessor {
    */
   public static native void registerPopStateListener (Consumer<ClientHistoryChangeEvent> listenerCallback) /*-{
     $wnd.addEventListener('popstate', function (ev) {
-      @HistoryAPINativeAccessor::processEvent(*)(listenerCallback, $doc.location.href, ev.state)
+      var state = null;
+      try {
+        state = JSON.stringify(ev.state);
+      } catch (ex) {}
+
+      @HistoryAPINativeAccessor::processEvent(*)(listenerCallback, $doc.location.href, state);
     }.bind(this))
   }-*/;
 
