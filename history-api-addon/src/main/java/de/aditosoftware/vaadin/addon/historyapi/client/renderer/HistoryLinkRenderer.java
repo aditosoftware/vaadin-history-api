@@ -41,7 +41,6 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, SimplePanel>
       // Clear the current widget if there is any.
       if (widget.getWidget() != null) {
         widget.setWidget(null);
-        widget.getElement().removeAllChildren();
       }
 
       // Update the inner text of the widget element.
@@ -72,12 +71,10 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, SimplePanel>
         Anchor anchor = new Anchor(dataText, dataURI);
         anchor.setStylePrimaryName(PRIMARY_STYLE_NAME);
         anchor.addClickHandler(event -> handleAnchorClick(anchor.getHref(), event));
-        widget.getElement().removeAllChildren();
         widget.setWidget(anchor);
       }
     } else {
       // What?
-      widget.getElement().removeAllChildren();
       widget.setWidget(null);
     }
   }
