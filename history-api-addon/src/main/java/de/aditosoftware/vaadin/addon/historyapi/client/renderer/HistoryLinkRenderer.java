@@ -71,6 +71,7 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, SimplePanel>
         Anchor anchor = new Anchor(dataText, dataURI);
         anchor.setStylePrimaryName(PRIMARY_STYLE_NAME);
         anchor.addClickHandler(event -> handleAnchorClick(anchor.getHref(), event));
+        widget.getElement().removeAllChildren();
         widget.setWidget(anchor);
       }
     } else {
