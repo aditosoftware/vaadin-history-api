@@ -29,7 +29,7 @@ screen -dmS application mvn jetty:run --file history-api-demo/pom.xml
 exitCode=0
 {
   # Wait until the application server has been started.
-  bash "$scriptDir"/wait-for-it.sh -h localhost -p 8080
+  bash "$scriptDir"/wait-for-it.sh -h localhost -p 8080 -t 60
 
   doLog "Switching working directory to 'cypress'"
   cd cypress || return
