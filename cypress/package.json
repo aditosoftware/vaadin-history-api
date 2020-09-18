@@ -1,0 +1,11 @@
+{
+  "name": "vaadin-history-api-cypress",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "cypress": "^5.2.0",
+    "typescript": "^4.0.2"
+  }
+}
