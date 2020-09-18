@@ -39,7 +39,7 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Set persmissions
         run: |
-          chmod +x scripts/run-and-test-sh
+          chmod +x scripts/run-and-test.sh
           chmod +x scripts/wait-for-it.sh
       - name: Test
         run: ./scripts/run-and-test.sh
