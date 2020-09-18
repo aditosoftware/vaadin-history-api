@@ -25,6 +25,11 @@ public class HistoryLinkUtil {
     // Prevent the default action (opening the link in this case).
     event.preventDefault();
 
+    // Stop propagation of the click event to the parents. This is necessary
+    // to avoid sending the click event to the ItemClick listener if
+    // HandleWidgetEvents is enabled.
+    event.stopPropagation();
+
     // Push a new state using the given uri.
     HistoryAPINativeAccessor.pushState(null, null, uri);
 
