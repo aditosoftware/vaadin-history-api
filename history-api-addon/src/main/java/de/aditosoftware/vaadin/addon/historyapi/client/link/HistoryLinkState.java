@@ -7,6 +7,15 @@ import de.aditosoftware.vaadin.addon.historyapi.client.connector.HistoryLinkConn
  * Describes the state for the {@link HistoryLinkConnector}.
  */
 public class HistoryLinkState extends AbstractSingleComponentContainerState {
-  public int tabIndex;
-  public String uri;
+    public int tabIndex;
+
+    /**
+     * Defines the actual URI which shall be opened by this link.
+     */
+    public String uri;
+
+    /**
+     * Defines if any click shall open a new tab instead of pushing the link on this tab.
+     */
+    public boolean openNewTab = false;
 }

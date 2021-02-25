@@ -86,6 +86,24 @@ public class HistoryLinkRenderer extends AbstractRenderer<Object, HistoryLinkRen
   }
 
   /**
+   * Will return if any click on the link shall open a new tab instead of pushing the link on the current tab.
+   *
+   * @return The state of the option.
+   */
+  public boolean isOpenNewTab() {
+    return getState(false).openNewTab;
+  }
+
+  /**
+   * Will set if any click on the link shall open a new tab instead of pushing the link on the current tab.
+   *
+   * @param pOpenNewTab The state of the option.
+   */
+  public void setOpenNewTab(boolean pOpenNewTab) {
+    getState().openNewTab = pOpenNewTab;
+  }
+
+  /**
    * Represents a data class which holds the required data for the
    * {@link HistoryLinkRenderer}.
    */

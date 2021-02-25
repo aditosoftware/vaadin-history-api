@@ -19,11 +19,11 @@ import java.net.URI;
 public class HistoryLink extends AbstractSingleComponentContainer implements Component.Focusable, HistoryChangeAdapter {
   private final HistoryAPI historyAPI;
 
-  public HistoryLink (@NotNull Component component, @NotNull URI uri) {
+  public HistoryLink(@NotNull Component component, @NotNull URI uri) {
     this(component, uri, null);
   }
 
-  public HistoryLink (@NotNull Component component, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
+  public HistoryLink(@NotNull Component component, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
     this.historyAPI = historyAPI;
     setContent(component);
     setURI(uri);
@@ -31,7 +31,7 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
     registerRpc(this::handleHistoryChangeEvent, HistoryChangeServerRpc.class);
   }
 
-  public HistoryLink (@NotNull String caption, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
+  public HistoryLink(@NotNull String caption, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
     this.historyAPI = historyAPI;
     setContent(null);
     setURI(uri);
@@ -41,12 +41,12 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
   }
 
   @Override
-  protected HistoryLinkState getState () {
+  protected HistoryLinkState getState() {
     return (HistoryLinkState) super.getState();
   }
 
   @Override
-  protected HistoryLinkState getState (boolean markAsDirty) {
+  protected HistoryLinkState getState(boolean markAsDirty) {
     return (HistoryLinkState) super.getState(markAsDirty);
   }
 
@@ -56,7 +56,7 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
    * @return The URI.
    */
   @Nullable
-  public URI setURI () {
+  public URI setURI() {
     return URI.create(getState().uri);
   }
 
@@ -65,23 +65,41 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
    *
    * @param pURI The new URI for the Link.
    */
-  public void setURI (URI pURI) {
+  public void setURI(URI pURI) {
     getState().uri = pURI.toString();
   }
 
   @Override
-  public void focus () {
+  public void focus() {
     super.focus();
   }
 
   @Override
-  public int getTabIndex () {
+  public int getTabIndex() {
     return getState(false).tabIndex;
   }
 
   @Override
-  public void setTabIndex (int tabIndex) {
+  public void setTabIndex(int tabIndex) {
     getState().tabIndex = tabIndex;
+  }
+
+  /**
+   * Will return if any click on the link shall open a new tab instead of pushing the link on the current tab.
+   *
+   * @return The state of the option.
+   */
+  public boolean isOpenNewTab() {
+    return getState(false).openNewTab;
+  }
+
+  /**
+   * Will set if any click on the link shall open a new tab instead of pushing the link on the current tab.
+   *
+   * @param pOpenNewTab The state of the option.
+   */
+  public void setOpenNewTab(boolean pOpenNewTab) {
+    getState().openNewTab = pOpenNewTab;
   }
 
   /**
@@ -91,7 +109,7 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
    *
    * @param clientEvent The client event to handle.
    */
-  private void handleHistoryChangeEvent (@NotNull ClientHistoryChangeEvent clientEvent) {
+  private void handleHistoryChangeEvent(@NotNull ClientHistoryChangeEvent clientEvent) {
     HistoryChangeEvent event = new HistoryChangeEvent(this, URI.create(clientEvent.getURI()), null, null, HistoryChangeOrigin.ANCHOR);
 
     if (historyAPI != null)
