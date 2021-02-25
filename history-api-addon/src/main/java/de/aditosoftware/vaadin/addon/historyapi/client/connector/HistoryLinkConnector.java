@@ -23,17 +23,17 @@ import org.jetbrains.annotations.NotNull;
 @Connect(HistoryLink.class)
 public class HistoryLinkConnector extends AbstractSingleComponentContainerConnector implements HistoryChangeAwareConnector {
   @Override
-  public HistoryLinkWidget getWidget () {
+  public HistoryLinkWidget getWidget() {
     return (HistoryLinkWidget) super.getWidget();
   }
 
   @Override
-  public HistoryLinkState getState () {
+  public HistoryLinkState getState() {
     return (HistoryLinkState) super.getState();
   }
 
   @Override
-  protected void init () {
+  protected void init() {
     super.init();
 
     // Add a click handler to the widget.
@@ -41,7 +41,7 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
   }
 
   @Override
-  public void onStateChanged (StateChangeEvent stateChangeEvent) {
+  public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
     if (stateChangeEvent.hasPropertyChanged("uri"))
@@ -50,6 +50,13 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
       } else {
         getWidget().getElement().setAttribute("href", getState().uri);
       }
+
+    if (stateChangeEvent.hasPropertyChanged("openNewTab")) {
+      if (getState().openNewTab)
+        getWidget().getElement().setAttribute("target", "_blank");
+      else
+        getWidget().getElement().setAttribute("target", "");
+    }
 
     if (stateChangeEvent.hasPropertyChanged("tabIndex"))
       getWidget().getElement().setTabIndex(getState().tabIndex);
@@ -73,25 +80,25 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
   }
 
   @Override
-  public boolean delegateCaptionHandling () {
+  public boolean delegateCaptionHandling() {
     return false;
   }
 
   @Override
-  public void onConnectorHierarchyChange (ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+  public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     updateLayout();
   }
 
   @Override
-  public void updateCaption (ComponentConnector connector) {
+  public void updateCaption(ComponentConnector connector) {
   }
 
   @Override
-  public @NotNull HistoryChangeServerRpc getHistoryChangeServerRpc () {
+  public @NotNull HistoryChangeServerRpc getHistoryChangeServerRpc() {
     return getRpcProxy(HistoryChangeServerRpc.class);
   }
 
-  private void updateLayout () {
+  private void updateLayout() {
     if (getChildComponents().isEmpty()) {
       getWidget().setWidget(null);
       getWidget().getElement().removeAllChildren();
@@ -117,8 +124,8 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
    *
    * @param event The event of the click.
    */
-  private void handleElementClick (ClickEvent event) {
-    if (HistoryLinkUtil.handleAnchorClick(getState().uri, event))
+  private void handleElementClick(ClickEvent event) {
+    if (!getState().openNewTab && HistoryLinkUtil.handleAnchorClick(getState().uri, event))
       handleHistoryChange(new ClientHistoryChangeEvent(getState().uri, null, ClientHistoryChangeOrigin.ANCHOR));
   }
 }

@@ -18,20 +18,22 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, SimplePanel>
   private static final String DATA_URI = "uri";
   private static final String DATA_TEXT = "text";
   private final Consumer<String> clickCallback;
+  private final boolean openNewTab;
 
-  public HistoryLinkRenderer (Consumer<String> clickCallback) {
+  public HistoryLinkRenderer(Consumer<String> clickCallback, boolean openNewTab) {
     this.clickCallback = clickCallback;
+    this.openNewTab = openNewTab;
   }
 
   @Override
-  public SimplePanel createWidget () {
+  public SimplePanel createWidget() {
     SimplePanel panel = new SimplePanel();
     panel.setStylePrimaryName(WRAPPER_STYLE_NAME);
     return panel;
   }
 
   @Override
-  public void render (RendererCellReference cell, JsonObject data, SimplePanel widget) {
+  public void render(RendererCellReference cell, JsonObject data, SimplePanel widget) {
     if (!data.hasKey(DATA_URI) && data.hasKey(DATA_TEXT)) {
       // There is only text but no link. Clear widget and set inner text.
 
@@ -65,6 +67,10 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, SimplePanel>
 
         if (!Objects.equals(dataURI, anchor.getHref()))
           anchor.setHref(data.get(DATA_URI).asString());
+
+        final String requestedTarget = openNewTab ? "_blank" : "";
+        if (!Objects.equals(requestedTarget, anchor.getTarget()))
+          anchor.setTarget(requestedTarget);
       } else {
         // Either there is no widget or the current widget is no Anchor,
         // therefore create a new Anchor Widget, initialize it and set it as widget.
@@ -86,8 +92,8 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, SimplePanel>
    * @param uri   The URI of the anchor.
    * @param event The click event.
    */
-  private void handleAnchorClick (String uri, ClickEvent event) {
-    if (HistoryLinkUtil.handleAnchorClick(uri, event))
+  private void handleAnchorClick(String uri, ClickEvent event) {
+    if (!openNewTab && HistoryLinkUtil.handleAnchorClick(uri, event))
       clickCallback.accept(uri);
   }
 }

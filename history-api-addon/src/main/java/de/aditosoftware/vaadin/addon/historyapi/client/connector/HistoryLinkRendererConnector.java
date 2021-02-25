@@ -17,17 +17,17 @@ import org.jetbrains.annotations.NotNull;
 @Connect(de.aditosoftware.vaadin.addon.historyapi.HistoryLinkRenderer.class)
 public class HistoryLinkRendererConnector extends AbstractGridRendererConnector<JsonObject> implements HistoryChangeAwareConnector {
   @Override
-  protected HistoryLinkRenderer createRenderer () {
-    return new HistoryLinkRenderer(this::handleAnchorClick);
+  protected HistoryLinkRenderer createRenderer() {
+    return new HistoryLinkRenderer(this::handleAnchorClick, getState().openNewTab);
   }
 
   @Override
-  public HistoryLinkRendererState getState () {
+  public HistoryLinkRendererState getState() {
     return (HistoryLinkRendererState) super.getState();
   }
 
   @Override
-  public @NotNull HistoryChangeServerRpc getHistoryChangeServerRpc () {
+  public @NotNull HistoryChangeServerRpc getHistoryChangeServerRpc() {
     return getRpcProxy(HistoryChangeServerRpc.class);
   }
 
@@ -37,7 +37,7 @@ public class HistoryLinkRendererConnector extends AbstractGridRendererConnector<
    *
    * @param uri The URI for the event.
    */
-  private void handleAnchorClick (String uri) {
+  private void handleAnchorClick(String uri) {
     handleHistoryChange(new ClientHistoryChangeEvent(uri, null, ClientHistoryChangeOrigin.ANCHOR));
   }
 }

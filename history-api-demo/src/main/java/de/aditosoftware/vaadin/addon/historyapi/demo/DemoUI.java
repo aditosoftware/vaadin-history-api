@@ -1,36 +1,40 @@
 package de.aditosoftware.vaadin.addon.historyapi.demo;
 
 import com.sun.tools.javac.util.List;
-import com.vaadin.annotations.*;
+import com.vaadin.annotations.Push;
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
+import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.server.*;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.renderers.TextRenderer;
-import de.aditosoftware.vaadin.addon.historyapi.*;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryAPI;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryLink;
+import de.aditosoftware.vaadin.addon.historyapi.HistoryLinkRenderer;
 
 import javax.servlet.annotation.WebServlet;
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Theme("demo")
 @Title("History-API Demo")
 @Push()
 @SuppressWarnings("serial")
-public class DemoUI extends UI
-{
+public class DemoUI extends UI {
 
   @WebServlet(value = "/*", asyncSupported = true)
   @VaadinServletConfiguration(productionMode = false, ui = DemoUI.class)
-  public static class Servlet extends VaadinServlet
-  {
+  public static class Servlet extends VaadinServlet {
 
   }
 
   @Override
-  protected void init(VaadinRequest request)
-  {
+  protected void init(VaadinRequest request) {
     HistoryAPI historyAPI = HistoryAPI.forUI(UI.getCurrent());
 
 
@@ -97,23 +101,31 @@ public class DemoUI extends UI
     linkWrapper.setId("test-history-link-1");
     linkWrapper.setIcon(VaadinIcons.ANCHOR);
 
+    HistoryLink linkWrapperNewTab = new HistoryLink("TEST! but in a new tab...", URI.create("/client"), historyAPI);
+    linkWrapperNewTab.setId("test-history-link-1");
+    linkWrapperNewTab.setIcon(VaadinIcons.ANCHOR);
+    linkWrapperNewTab.setOpenNewTab(true);
+
+
     Button focusButton = new Button("Focus link above");
     focusButton.addClickListener(event -> linkWrapper.focus());
     focusButton.setId("test-focus-button-1");
 
-    mainLayout.addComponents(linkWrapper, focusButton);
+    mainLayout.addComponents(linkWrapper, linkWrapperNewTab, focusButton);
     mainLayout.addComponent(createTestGrid(historyAPI));
   }
 
-  private Grid<TestGridData> createTestGrid(HistoryAPI historyAPI)
-  {
+  private Grid<TestGridData> createTestGrid(HistoryAPI historyAPI) {
     Grid<TestGridData> grid = new Grid<>();
     grid.setId("test-grid-1");
 
     HistoryLinkRenderer linkRenderer = new HistoryLinkRenderer(historyAPI);
+    HistoryLinkRenderer newTabLinkRenderer = new HistoryLinkRenderer(historyAPI);
+    newTabLinkRenderer.setOpenNewTab(true);
 
     grid.addColumn(TestGridData::getText, new TextRenderer());
-    grid.addColumn(TestGridData::getLinkData, linkRenderer);
+    grid.addColumn(TestGridData::getLinkData, linkRenderer).setCaption("Default");
+    grid.addColumn(TestGridData::getLinkData, newTabLinkRenderer).setCaption("New tab");
 
     grid.setItems(List.of(
         new TestGridData("first", new HistoryLinkRenderer.Data("first link", URI.create("/client/first"))),
@@ -125,24 +137,20 @@ public class DemoUI extends UI
     return grid;
   }
 
-  private class TestGridData
-  {
+  private class TestGridData {
     public String text;
     public HistoryLinkRenderer.Data linkData;
 
-    public TestGridData(String text, HistoryLinkRenderer.Data linkData)
-    {
+    public TestGridData(String text, HistoryLinkRenderer.Data linkData) {
       this.text = text;
       this.linkData = linkData;
     }
 
-    public String getText()
-    {
+    public String getText() {
       return text;
     }
 
-    public HistoryLinkRenderer.Data getLinkData()
-    {
+    public HistoryLinkRenderer.Data getLinkData() {
       return linkData;
     }
   }
