@@ -13,15 +13,14 @@ import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChange
 import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeOrigin;
 import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkState;
 import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkWidget;
-import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryChangeServerRpc;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryLinkChangeServiceRpc;
 import de.aditosoftware.vaadin.addon.historyapi.client.util.HistoryLinkUtil;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Represents the connector for the {@link HistoryLink} component.
- */
+/** Represents the connector for the {@link HistoryLink} component. */
 @Connect(HistoryLink.class)
-public class HistoryLinkConnector extends AbstractSingleComponentContainerConnector implements HistoryChangeAwareConnector {
+public class HistoryLinkConnector extends AbstractSingleComponentContainerConnector
+    implements HistoryChangeAwareConnector {
   @Override
   public HistoryLinkWidget getWidget() {
     return (HistoryLinkWidget) super.getWidget();
@@ -52,10 +51,8 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
       }
 
     if (stateChangeEvent.hasPropertyChanged("openNewTab")) {
-      if (getState().openNewTab)
-        getWidget().getElement().setAttribute("target", "_blank");
-      else
-        getWidget().getElement().setAttribute("target", "");
+      if (getState().openNewTab) getWidget().getElement().setAttribute("target", "_blank");
+      else getWidget().getElement().setAttribute("target", "");
     }
 
     if (stateChangeEvent.hasPropertyChanged("tabIndex"))
@@ -67,13 +64,11 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
       VCaption.setCaptionText(getWidget().captionElement, getState());
 
     // Set the icon widget to null if it's set.
-    if (getWidget().icon != null)
-      getWidget().icon = null;
+    if (getWidget().icon != null) getWidget().icon = null;
 
     // Set the icon widget if there is a icon on the resources.
     Icon icon = getIcon();
-    if (icon != null)
-      getWidget().icon = icon;
+    if (icon != null) getWidget().icon = icon;
 
     // Update the layout.
     updateLayout();
@@ -85,17 +80,17 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
   }
 
   @Override
-  public void onConnectorHierarchyChange(ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
+  public void onConnectorHierarchyChange(
+      ConnectorHierarchyChangeEvent connectorHierarchyChangeEvent) {
     updateLayout();
   }
 
   @Override
-  public void updateCaption(ComponentConnector connector) {
-  }
+  public void updateCaption(ComponentConnector connector) {}
 
   @Override
-  public @NotNull HistoryChangeServerRpc getHistoryChangeServerRpc() {
-    return getRpcProxy(HistoryChangeServerRpc.class);
+  public @NotNull HistoryLinkChangeServiceRpc getHistoryChangeServerRpc() {
+    return getRpcProxy(HistoryLinkChangeServiceRpc.class);
   }
 
   private void updateLayout() {
@@ -109,7 +104,9 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
       // Attach icon if available.
       if (getWidget().icon != null) {
         if (!getWidget().getElement().isOrHasChild(getWidget().icon.getElement()))
-          getWidget().getElement().insertBefore(getWidget().icon.getElement(), getWidget().captionElement);
+          getWidget()
+              .getElement()
+              .insertBefore(getWidget().icon.getElement(), getWidget().captionElement);
       } else {
         getWidget().getElement().removeChild(getWidget().icon.getElement());
       }
@@ -125,7 +122,13 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
    * @param event The event of the click.
    */
   private void handleElementClick(ClickEvent event) {
-    if (!getState().openNewTab && HistoryLinkUtil.handleAnchorClick(getState().uri, event))
-      handleHistoryChange(new ClientHistoryChangeEvent(getState().uri, null, ClientHistoryChangeOrigin.ANCHOR));
+    if (!getState().openNewTab && HistoryLinkUtil.handleAnchorClick(getState().uri, event)) {
+      if (getState().hasClickCallback) {
+        getHistoryChangeServerRpc().onClick();
+      } else {
+        handleHistoryChange(
+            new ClientHistoryChangeEvent(getState().uri, null, ClientHistoryChangeOrigin.ANCHOR));
+      }
+    }
   }
 }

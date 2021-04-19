@@ -4,31 +4,34 @@ import com.vaadin.ui.AbstractSingleComponentContainer;
 import com.vaadin.ui.Component;
 import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeEvent;
 import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkState;
-import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryChangeServerRpc;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryLinkChangeServiceRpc;
 import de.aditosoftware.vaadin.addon.historyapi.event.HistoryChangeAdapter;
 import de.aditosoftware.vaadin.addon.historyapi.event.HistoryChangeEvent;
 import de.aditosoftware.vaadin.addon.historyapi.event.HistoryChangeOrigin;
+import de.aditosoftware.vaadin.addon.historyapi.util.HistoryLinkClickCallback;
+import de.aditosoftware.vaadin.addon.historyapi.util.HistoryLinkClickCallbackUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 
-/**
- * Represents a link, which wraps the given component into an A-Tag.
- */
-public class HistoryLink extends AbstractSingleComponentContainer implements Component.Focusable, HistoryChangeAdapter {
+/** Represents a link, which wraps the given component into an A-Tag. */
+public class HistoryLink extends AbstractSingleComponentContainer
+    implements Component.Focusable, HistoryChangeAdapter {
   private final HistoryAPI historyAPI;
+  private transient HistoryLinkClickCallback clickCallback;
 
   public HistoryLink(@NotNull Component component, @NotNull URI uri) {
     this(component, uri, null);
   }
 
-  public HistoryLink(@NotNull Component component, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
+  public HistoryLink(
+      @NotNull Component component, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
     this.historyAPI = historyAPI;
     setContent(component);
     setURI(uri);
 
-    registerRpc(this::handleHistoryChangeEvent, HistoryChangeServerRpc.class);
+    registerRpc(new ServiceRpcImpl(), HistoryLinkChangeServiceRpc.class);
   }
 
   public HistoryLink(@NotNull String caption, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
@@ -37,7 +40,7 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
     setURI(uri);
     setCaption(caption);
 
-    registerRpc(this::handleHistoryChangeEvent, HistoryChangeServerRpc.class);
+    registerRpc(new ServiceRpcImpl(), HistoryLinkChangeServiceRpc.class);
   }
 
   @Override
@@ -85,7 +88,8 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
   }
 
   /**
-   * Will return if any click on the link shall open a new tab instead of pushing the link on the current tab.
+   * Will return if any click on the link shall open a new tab instead of pushing the link on the
+   * current tab.
    *
    * @return The state of the option.
    */
@@ -94,7 +98,8 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
   }
 
   /**
-   * Will set if any click on the link shall open a new tab instead of pushing the link on the current tab.
+   * Will set if any click on the link shall open a new tab instead of pushing the link on the
+   * current tab.
    *
    * @param pOpenNewTab The state of the option.
    */
@@ -103,18 +108,46 @@ public class HistoryLink extends AbstractSingleComponentContainer implements Com
   }
 
   /**
-   * Will handle an incoming {@link ClientHistoryChangeEvent}. This will create
-   * a new {@link HistoryChangeEvent} and inform all listener. In addition it
-   * will send it to the {@link HistoryAPI} if available.
+   * Will set the callback which will be called when the user clicks on the link.
    *
-   * @param clientEvent The client event to handle.
+   * @param pCallback The click callback.
    */
-  private void handleHistoryChangeEvent(@NotNull ClientHistoryChangeEvent clientEvent) {
-    HistoryChangeEvent event = new HistoryChangeEvent(this, URI.create(clientEvent.getURI()), null, null, HistoryChangeOrigin.ANCHOR);
+  public void setClickCallback(@Nullable HistoryLinkClickCallback pCallback) {
+    clickCallback = pCallback;
+    getState().hasClickCallback = clickCallback != null;
+  }
 
-    if (historyAPI != null)
-      historyAPI.handleExternalHistoryChangeEvent(event);
+  /**
+   * Will return if there is a click callback set.
+   *
+   * @return If a click callback is set.
+   */
+  public boolean hasClickCallback() {
+    return clickCallback != null;
+  }
 
-    fireEvent(event);
+  private class ServiceRpcImpl implements HistoryLinkChangeServiceRpc {
+    @Override
+    public void onHistoryChange(ClientHistoryChangeEvent historyChangeEvent) {
+      HistoryChangeEvent event =
+          new HistoryChangeEvent(
+              this,
+              URI.create(historyChangeEvent.getURI()),
+              null,
+              null,
+              HistoryChangeOrigin.ANCHOR);
+
+      if (historyAPI != null) historyAPI.handleExternalHistoryChangeEvent(event);
+
+      fireEvent(event);
+    }
+
+    @Override
+    public void onClick() {
+      if (clickCallback != null) {
+        HistoryLinkClickCallbackUtil.executeCallback(
+            clickCallback, URI.create(getState(false).uri), historyAPI);
+      }
+    }
   }
 }

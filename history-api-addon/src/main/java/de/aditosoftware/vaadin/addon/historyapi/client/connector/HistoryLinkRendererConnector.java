@@ -11,11 +11,13 @@ import elemental.json.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents the connector for the {@link de.aditosoftware.vaadin.addon.historyapi.HistoryLinkRenderer}.
- * This handles the client-to-server communication, which just processes the event.
+ * Represents the connector for the {@link
+ * de.aditosoftware.vaadin.addon.historyapi.HistoryLinkRenderer}. This handles the client-to-server
+ * communication, which just processes the event.
  */
 @Connect(de.aditosoftware.vaadin.addon.historyapi.HistoryLinkRenderer.class)
-public class HistoryLinkRendererConnector extends AbstractGridRendererConnector<JsonObject> implements HistoryChangeAwareConnector {
+public class HistoryLinkRendererConnector extends AbstractGridRendererConnector<JsonObject>
+    implements HistoryChangeAwareConnector {
   @Override
   protected HistoryLinkRenderer createRenderer() {
     return new HistoryLinkRenderer(this::handleAnchorClick, getState().openNewTab);
@@ -32,8 +34,7 @@ public class HistoryLinkRendererConnector extends AbstractGridRendererConnector<
   }
 
   /**
-   * Will handle a click to an anchor element. The given uri will be passed to
-   * the event.
+   * Will handle a click to an anchor element. The given uri will be passed to the event.
    *
    * @param uri The URI for the event.
    */
