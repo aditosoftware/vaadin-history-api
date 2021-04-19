@@ -3,6 +3,7 @@ package de.aditosoftware.vaadin.addon.historyapi;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.vaadin.server.AbstractExtension;
+import com.vaadin.server.Extension;
 import com.vaadin.ui.UI;
 import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeEvent;
 import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryAPIClientRpc;
@@ -15,7 +16,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Represents the implements of {@link HistoryAPI} as Vaadin UI extension. This extension can only
@@ -25,27 +28,43 @@ import java.util.Map;
  * <p>You may use {@link HistoryAPI#forUI(UI)} to instantiate a new extension for the given UI.
  */
 public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapter {
-  private static transient Gson gson = new Gson();
-
-  /**
-   * Will create a new HistoryAPI instance for the given {@link UI}. The Extension will
-   * automatically extend with the given UI.
-   *
-   * @param pUI The UI to extend.
-   * @return The HistoryAPI instance.
-   */
-  public static HistoryAPI forUI(@NotNull UI pUI) {
-    return new HistoryAPI(pUI);
-  }
+  private static final transient Gson gson = new Gson();
 
   /**
    * Constructor for this extension. You may use {@link HistoryAPI#forUI(UI)} instead.
    *
    * @param pUI The UI on which this extension should be registered.
    */
-  public HistoryAPI(UI pUI) {
+  private HistoryAPI(@NotNull UI pUI) {
     extend(pUI);
     registerServerRpc();
+  }
+
+  /**
+   * Will return a {@link HistoryAPI} instance of the given {@link UI}. If there is already an
+   * instance registered on the UI, it will be reused.
+   *
+   * @param pUI The UI to extend.
+   * @return The HistoryAPI instance.
+   */
+  public static HistoryAPI forUI(@NotNull UI pUI) {
+    // Load the current extensions of the given UI.
+    Collection<Extension> extensions = pUI.getExtensions();
+
+    // If there are extensions available on the UI, we need to check if there is a matching one.
+    if (extensions != null && !extensions.isEmpty()) {
+      // Filter the extensions for a HistoryAPI.
+      Optional<Extension> optionalExtension =
+          extensions.stream().filter(it -> it instanceof HistoryAPI).findFirst();
+
+      // If a HistoryAPI instance was found, then just return it.
+      if (optionalExtension.isPresent() && optionalExtension.get() instanceof HistoryAPI) {
+        return (HistoryAPI) optionalExtension.get();
+      }
+    }
+
+    // As no existing HistoryAPI instance could be found, we need to create a new one here.
+    return new HistoryAPI(pUI);
   }
 
   /**
