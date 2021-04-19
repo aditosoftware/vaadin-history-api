@@ -11,12 +11,13 @@ import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryChangeServerRp
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Represents the connector for the {@link HistoryAPI} extension.
- * This handles the server-to-client communication for the History API commands.
+ * Represents the connector for the {@link HistoryAPI} extension. This handles the server-to-client
+ * communication for the History API commands.
  */
 @Connect(HistoryAPI.class)
-public class HistoryAPIConnector extends AbstractExtensionConnector implements HistoryChangeAwareConnector {
-  public HistoryAPIConnector () {
+public class HistoryAPIConnector extends AbstractExtensionConnector
+    implements HistoryChangeAwareConnector {
+  public HistoryAPIConnector() {
     // Register the client rpc.
     registerClientRpc();
 
@@ -25,27 +26,25 @@ public class HistoryAPIConnector extends AbstractExtensionConnector implements H
   }
 
   @Override
-  protected void extend (ServerConnector target) {
+  protected void extend(ServerConnector target) {
     // Is not required as this is no component extension.
   }
 
   @Override
-  public @Nullable HistoryChangeServerRpc getHistoryChangeServerRpc () {
+  public @Nullable HistoryChangeServerRpc getHistoryChangeServerRpc() {
     return getRpcProxy(HistoryChangeServerRpc.class);
   }
 
   /**
-   * Will register the client PRC which uses {@link DelegatingClientRpc} to
-   * delegate to the native accessor for the HTML5 History API.
+   * Will register the client PRC which uses {@link DelegatingClientRpc} to delegate to the native
+   * accessor for the HTML5 History API.
    */
-  private void registerClientRpc () {
+  private void registerClientRpc() {
     registerRpc(HistoryAPIClientRpc.class, new DelegatingClientRpc());
   }
 
-  /**
-   * Will register a new PopState listener on the {@link HistoryAPINativeAccessor}.
-   */
-  private void registerPopStateListener () {
+  /** Will register a new PopState listener on the {@link HistoryAPINativeAccessor}. */
+  private void registerPopStateListener() {
     HistoryAPINativeAccessor.registerPopStateListener(this::handleHistoryChange);
   }
 }

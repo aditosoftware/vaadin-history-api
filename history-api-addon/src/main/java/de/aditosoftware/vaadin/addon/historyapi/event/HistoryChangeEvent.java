@@ -8,8 +8,8 @@ import java.util.EventObject;
 import java.util.Map;
 
 /**
- * Represents the event which will be fired when the history changes. This will
- * be used for PopState events and Anchor clicks.
+ * Represents the event which will be fired when the history changes. This will be used for PopState
+ * events and Anchor clicks.
  */
 public class HistoryChangeEvent extends EventObject {
   private URI uri;
@@ -17,9 +17,12 @@ public class HistoryChangeEvent extends EventObject {
   private Map<String, String> stateMap;
   private HistoryChangeOrigin origin;
 
-  public HistoryChangeEvent (Object eventSource, URI uri, String state,
-                             Map<String, String> stateMap,
-                             HistoryChangeOrigin origin) {
+  public HistoryChangeEvent(
+      Object eventSource,
+      URI uri,
+      String state,
+      Map<String, String> stateMap,
+      HistoryChangeOrigin origin) {
     super(eventSource);
     this.uri = uri;
     this.state = state;
@@ -28,22 +31,22 @@ public class HistoryChangeEvent extends EventObject {
   }
 
   @NotNull
-  public URI getURI () {
+  public URI getURI() {
     return uri;
   }
 
   @Nullable
-  public String getState () {
+  public String getState() {
     return state;
   }
 
   @Nullable
-  public Map<String, String> getStateMap () {
+  public Map<String, String> getStateMap() {
     return stateMap;
   }
 
   @NotNull
-  public HistoryChangeOrigin getOrigin () {
+  public HistoryChangeOrigin getOrigin() {
     return origin;
   }
 }

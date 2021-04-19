@@ -1,15 +1,9 @@
 package de.aditosoftware.vaadin.addon.historyapi.event;
 
-/**
- * Describes the origin of history change.
- */
+/** Describes the origin of history change. */
 public enum HistoryChangeOrigin {
-  /**
-   * If the change originates form a PopState event.
-   */
+  /** If the change originates form a PopState event. */
   POPSTATE,
-  /**
-   * If the change originates from a Anchor-Element click.
-   */
+  /** If the change originates from a Anchor-Element click. */
   ANCHOR
 }

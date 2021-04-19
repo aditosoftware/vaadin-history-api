@@ -10,27 +10,27 @@ import org.jetbrains.annotations.Nullable;
  */
 public class DelegatingClientRpc implements HistoryAPIClientRpc {
   @Override
-  public void go (int pDelta) {
+  public void go(int pDelta) {
     HistoryAPINativeAccessor.go(pDelta);
   }
 
   @Override
-  public void back () {
+  public void back() {
     HistoryAPINativeAccessor.back();
   }
 
   @Override
-  public void forward () {
+  public void forward() {
     HistoryAPINativeAccessor.forward();
   }
 
   @Override
-  public void pushState (@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
+  public void pushState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
     HistoryAPINativeAccessor.pushState(pState, pTitle, pURL);
   }
 
   @Override
-  public void replaceState (@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
+  public void replaceState(@Nullable String pState, @Nullable String pTitle, @NotNull String pURL) {
     HistoryAPINativeAccessor.replaceState(pState, pTitle, pURL);
   }
 }

@@ -9,14 +9,14 @@ import com.vaadin.client.ui.Icon;
 import de.aditosoftware.vaadin.addon.historyapi.client.connector.HistoryLinkConnector;
 
 /**
- * Describes the widget for the {@link HistoryLinkConnector}. This is just a
- * {@link SimplePanel} with an {@link Anchor} as wrapping element.
+ * Describes the widget for the {@link HistoryLinkConnector}. This is just a {@link SimplePanel}
+ * with an {@link Anchor} as wrapping element.
  */
 public class HistoryLinkWidget extends SimplePanel implements Focusable {
   public Element captionElement = DOM.createSpan();
   public Icon icon;
 
-  public HistoryLinkWidget () {
+  public HistoryLinkWidget() {
     super(DOM.createAnchor());
 
     // noinspection GWTStyleCheck
@@ -24,7 +24,7 @@ public class HistoryLinkWidget extends SimplePanel implements Focusable {
   }
 
   @Override
-  public void focus () {
+  public void focus() {
     getElement().focus();
   }
 }

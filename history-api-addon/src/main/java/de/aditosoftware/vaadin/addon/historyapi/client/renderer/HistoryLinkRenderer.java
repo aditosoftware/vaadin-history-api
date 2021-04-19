@@ -69,8 +69,7 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, SimplePanel>
           anchor.setHref(data.get(DATA_URI).asString());
 
         final String requestedTarget = openNewTab ? "_blank" : "";
-        if (!Objects.equals(requestedTarget, anchor.getTarget()))
-          anchor.setTarget(requestedTarget);
+        if (!Objects.equals(requestedTarget, anchor.getTarget())) anchor.setTarget(requestedTarget);
       } else {
         // Either there is no widget or the current widget is no Anchor,
         // therefore create a new Anchor Widget, initialize it and set it as widget.
@@ -89,11 +88,10 @@ public class HistoryLinkRenderer extends WidgetRenderer<JsonObject, SimplePanel>
   /**
    * Will handle a ClickEvent on a created anchor element.
    *
-   * @param uri   The URI of the anchor.
+   * @param uri The URI of the anchor.
    * @param event The click event.
    */
   private void handleAnchorClick(String uri, ClickEvent event) {
-    if (!openNewTab && HistoryLinkUtil.handleAnchorClick(uri, event))
-      clickCallback.accept(uri);
+    if (!openNewTab && HistoryLinkUtil.handleAnchorClick(uri, event)) clickCallback.accept(uri);
   }
 }

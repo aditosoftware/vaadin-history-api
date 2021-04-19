@@ -6,7 +6,9 @@ import org.jetbrains.annotations.NotNull;
 
 public interface HistoryChangeAdapter extends MethodEventSource {
   @NotNull
-  default Registration addHistoryChangeListener(@NotNull HistoryChangeListener historyChangeListener) {
-    return addListener(HistoryChangeEvent.class, historyChangeListener, HistoryChangeListener.METHOD);
+  default Registration addHistoryChangeListener(
+      @NotNull HistoryChangeListener historyChangeListener) {
+    return addListener(
+        HistoryChangeEvent.class, historyChangeListener, HistoryChangeListener.METHOD);
   }
 }

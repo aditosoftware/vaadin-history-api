@@ -18,13 +18,11 @@ import java.net.URI;
 import java.util.Map;
 
 /**
- * Represents the implements of {@link HistoryAPI} as Vaadin UI extension. This
- * extension can only be used on an {@link UI}. This is intended to mimic the
- * actual HTMl5 History API.
- * See https://html.spec.whatwg.org/multipage/history.html#the-history-interface
- * <p>
- * You may use {@link HistoryAPI#forUI(UI)} to instantiate a new
- * extension for the given UI.
+ * Represents the implements of {@link HistoryAPI} as Vaadin UI extension. This extension can only
+ * be used on an {@link UI}. This is intended to mimic the actual HTMl5 History API. See
+ * https://html.spec.whatwg.org/multipage/history.html#the-history-interface
+ *
+ * <p>You may use {@link HistoryAPI#forUI(UI)} to instantiate a new extension for the given UI.
  */
 public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapter {
   private static transient Gson gson = new Gson();
@@ -36,45 +34,41 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    * @param pUI The UI to extend.
    * @return The HistoryAPI instance.
    */
-  public static HistoryAPI forUI (@NotNull UI pUI) {
+  public static HistoryAPI forUI(@NotNull UI pUI) {
     return new HistoryAPI(pUI);
   }
 
   /**
-   * Constructor for this extension. You may use {@link HistoryAPI#forUI(UI)}
-   * instead.
+   * Constructor for this extension. You may use {@link HistoryAPI#forUI(UI)} instead.
    *
    * @param pUI The UI on which this extension should be registered.
    */
-  public HistoryAPI (UI pUI) {
+  public HistoryAPI(UI pUI) {
     extend(pUI);
     registerServerRpc();
   }
 
   /**
-   * Goes back or forward the specified number of steps in the history. If zero
-   * is given it will stay on this page. If the delta is out of range of the
-   * history it will do nothing.
+   * Goes back or forward the specified number of steps in the history. If zero is given it will
+   * stay on this page. If the delta is out of range of the history it will do nothing.
    *
    * @param pDelta The positive or negative delta.
    */
-  public void go (int pDelta) {
+  public void go(int pDelta) {
     getProxy().go(pDelta);
   }
 
   /**
-   * Will go back one step in the history. (Equals to {@link this#go(int)}
-   * when called with `-1`)
+   * Will go back one step in the history. (Equals to {@link this#go(int)} when called with `-1`)
    */
-  public void back () {
+  public void back() {
     getProxy().back();
   }
 
   /**
-   * Will go forward one step in the history. (Equals to {@link this#go(int)}
-   * when called with `1`)
+   * Will go forward one step in the history. (Equals to {@link this#go(int)} when called with `1`)
    */
-  public void forward () {
+  public void forward() {
     getProxy().forward();
   }
 
@@ -83,17 +77,17 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    *
    * @param pURL The URL.
    */
-  public void pushState (@NotNull String pURL) {
+  public void pushState(@NotNull String pURL) {
     pushState(pURL, (String) null, null);
   }
 
   /**
    * Pushes the given state, title and URL onto the history.
    *
-   * @param pURL   The URL.
+   * @param pURL The URL.
    * @param pState The state, which will be encoded using a JSON serializer.
    */
-  public void pushState (@NotNull String pURL, @Nullable Map<String, String> pState) {
+  public void pushState(@NotNull String pURL, @Nullable Map<String, String> pState) {
     pushState(pURL, pState, null);
   }
 
@@ -102,19 +96,20 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    *
    * @param pState The state, which will be encoded using a JSON serializer.
    * @param pTitle The title, which will mostly not picked up by most browsers.
-   * @param pURL   The URL.
+   * @param pURL The URL.
    */
-  public void pushState (@NotNull String pURL, @Nullable Map<String, String> pState, @Nullable String pTitle) {
+  public void pushState(
+      @NotNull String pURL, @Nullable Map<String, String> pState, @Nullable String pTitle) {
     getProxy().pushState(encodeMap(pState), pTitle, pURL);
   }
 
   /**
    * Pushes the given state, title, and URL onto the history.
    *
-   * @param pURL   the URL.
+   * @param pURL the URL.
    * @param pState The state.
    */
-  public void pushState (@NotNull String pURL, @Nullable String pState) {
+  public void pushState(@NotNull String pURL, @Nullable String pState) {
     pushState(pURL, pState, null);
   }
 
@@ -123,9 +118,9 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    *
    * @param pState The state.
    * @param pTitle The title, which will mostly not picked up by most browser.
-   * @param pURL   the URL.
+   * @param pURL the URL.
    */
-  public void pushState (@NotNull String pURL, @Nullable String pState, @Nullable String pTitle) {
+  public void pushState(@NotNull String pURL, @Nullable String pState, @Nullable String pTitle) {
     getProxy().pushState(encodeString(pState), pTitle, pURL);
   }
 
@@ -134,17 +129,17 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    *
    * @param pURL The URL.
    */
-  public void replaceState (@NotNull String pURL) {
+  public void replaceState(@NotNull String pURL) {
     replaceState(pURL, (String) null, null);
   }
 
   /**
    * Will replace the current state with the given state, title and URL.
    *
-   * @param pURL   The URL.
+   * @param pURL The URL.
    * @param pState The state, which will be encoded using a JSON serializer.
    */
-  public void replaceState (@NotNull String pURL, @Nullable Map<String, String> pState) {
+  public void replaceState(@NotNull String pURL, @Nullable Map<String, String> pState) {
     replaceState(pURL, pState, null);
   }
 
@@ -153,19 +148,20 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    *
    * @param pState The state, which will be encoded using a JSON serializer.
    * @param pTitle The title, which will mostly not picked up by most browsers.
-   * @param pURL   The URL.
+   * @param pURL The URL.
    */
-  public void replaceState (@NotNull String pURL, @Nullable Map<String, String> pState, @Nullable String pTitle) {
+  public void replaceState(
+      @NotNull String pURL, @Nullable Map<String, String> pState, @Nullable String pTitle) {
     getProxy().replaceState(encodeMap(pState), pTitle, pURL);
   }
 
   /**
    * Will replace the current state with the given state, title and URL.
    *
-   * @param pURL   The URL.
+   * @param pURL The URL.
    * @param pState The state.
    */
-  public void replaceState (@NotNull String pURL, @Nullable String pState) {
+  public void replaceState(@NotNull String pURL, @Nullable String pState) {
     replaceState(pURL, pState, null);
   }
 
@@ -174,9 +170,9 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    *
    * @param pState The state.
    * @param pTitle The title, which will mostly not picked up by most browsers
-   * @param pURL   The URL.
+   * @param pURL The URL.
    */
-  public void replaceState (@NotNull String pURL, @Nullable String pState, @Nullable String pTitle) {
+  public void replaceState(@NotNull String pURL, @Nullable String pState, @Nullable String pTitle) {
     getProxy().replaceState(encodeString(pState), pTitle, pURL);
   }
 
@@ -186,7 +182,7 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    * @return The RPC proxy.
    */
   @NotNull
-  private HistoryAPIClientRpc getProxy () {
+  private HistoryAPIClientRpc getProxy() {
     return getRpcProxy(HistoryAPIClientRpc.class);
   }
 
@@ -197,7 +193,7 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    * @return The encoded map.
    */
   @NotNull
-  private String encodeMap (@NotNull Map<String, String> pMap) {
+  private String encodeMap(@NotNull Map<String, String> pMap) {
     return gson.toJson(pMap);
   }
 
@@ -208,35 +204,34 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    * @return The encoded string.
    */
   @NotNull
-  private String encodeString (@NotNull String pString) {
+  private String encodeString(@NotNull String pString) {
     return gson.toJson(pString);
   }
 
   /**
-   * Will create a new server-side PopState event from the given client-side
-   * PopState event. If the given state in the client-side event can not be
-   * decoded using GSON it will not set the stateMap property, but the state
-   * property.
+   * Will create a new server-side PopState event from the given client-side PopState event. If the
+   * given state in the client-side event can not be decoded using GSON it will not set the stateMap
+   * property, but the state property.
    *
    * @param event The actual client-side PopState event.
    * @return The created server-side PopState event.
-   * @throws IllegalArgumentException If any part the given client-side
-   *                                  PopState event can not be decoded.
+   * @throws IllegalArgumentException If any part the given client-side PopState event can not be
+   *     decoded.
    */
   @NotNull
-  private HistoryChangeEvent createHistoryChangeEvent (@NotNull ClientHistoryChangeEvent event) {
+  private HistoryChangeEvent createHistoryChangeEvent(@NotNull ClientHistoryChangeEvent event) {
     // Try to parse the given string URI.
     URI eventURI = URI.create(event.getURI());
 
     // Try to parse the state of the event into an string/string map using GSON.
     Map<String, String> stateMap = null;
     try {
-      stateMap = gson
-          .fromJson(event.getState(), buildStringStringMapType());
+      stateMap = gson.fromJson(event.getState(), buildStringStringMapType());
     } catch (Exception ignored) {
     }
 
-    return new HistoryChangeEvent(this, eventURI, event.getState(), stateMap, HistoryChangeOrigin.POPSTATE);
+    return new HistoryChangeEvent(
+        this, eventURI, event.getState(), stateMap, HistoryChangeOrigin.POPSTATE);
   }
 
   /**
@@ -245,40 +240,34 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    * @return The type.
    */
   @NotNull
-  private static Type buildStringStringMapType () {
-    return new TypeToken<Map<String, String>>() {
-    }.getType();
+  private static Type buildStringStringMapType() {
+    return new TypeToken<Map<String, String>>() {}.getType();
   }
 
-  /**
-   * Will register the server RPC, which will process the client-side
-   * PopState events.
-   */
-  private void registerServerRpc () {
+  /** Will register the server RPC, which will process the client-side PopState events. */
+  private void registerServerRpc() {
     registerRpc(this::handleClientPopStateEvent, HistoryChangeServerRpc.class);
   }
 
   /**
-   * Will handle incoming client PopState events. It will convert the
-   * client-side event into an server-side event and trigger the event
-   * listeners.
+   * Will handle incoming client PopState events. It will convert the client-side event into an
+   * server-side event and trigger the event listeners.
    *
    * @param clientEvent The incoming client server-event.
    */
-  private void handleClientPopStateEvent (@NotNull ClientHistoryChangeEvent clientEvent) {
+  private void handleClientPopStateEvent(@NotNull ClientHistoryChangeEvent clientEvent) {
     HistoryChangeEvent serverEvent = createHistoryChangeEvent(clientEvent);
 
     fireEvent(serverEvent);
   }
 
   /**
-   * Will process a {@link HistoryChangeEvent} from an external source.
-   * This call normally originates from {@link HistoryLink} or
-   * {@link HistoryLinkRenderer}.
+   * Will process a {@link HistoryChangeEvent} from an external source. This call normally
+   * originates from {@link HistoryLink} or {@link HistoryLinkRenderer}.
    *
    * @param event The event to process.
    */
-  void handleExternalHistoryChangeEvent (HistoryChangeEvent event) {
+  void handleExternalHistoryChangeEvent(HistoryChangeEvent event) {
     fireEvent(event);
   }
 }
