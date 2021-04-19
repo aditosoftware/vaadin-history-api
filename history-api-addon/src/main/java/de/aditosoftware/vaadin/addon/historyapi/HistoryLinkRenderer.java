@@ -1,5 +1,6 @@
 package de.aditosoftware.vaadin.addon.historyapi;
 
+import com.vaadin.ui.UI;
 import com.vaadin.ui.renderers.AbstractRenderer;
 import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeEvent;
 import de.aditosoftware.vaadin.addon.historyapi.client.renderer.HistoryLinkRendererState;
@@ -10,7 +11,6 @@ import de.aditosoftware.vaadin.addon.historyapi.event.HistoryChangeOrigin;
 import elemental.json.Json;
 import elemental.json.JsonObject;
 import elemental.json.JsonValue;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
@@ -21,19 +21,10 @@ import java.net.URI;
  */
 public class HistoryLinkRenderer extends AbstractRenderer<Object, HistoryLinkRenderer.Data>
     implements HistoryChangeAdapter {
-  private final HistoryAPI historyAPI;
-
-  /** Constructor for the renderer. */
   public HistoryLinkRenderer() {
-    this(null);
-  }
-
-  /** Constructor for the renderer. */
-  public HistoryLinkRenderer(@Nullable HistoryAPI historyAPI) {
     super(HistoryLinkRenderer.Data.class, "");
-    this.historyAPI = historyAPI;
 
-    registerRpc(this::handleHistoryChangeEvent, HistoryChangeServerRpc.class);
+    registerRpc(new ServerRpcImpl(), HistoryChangeServerRpc.class);
   }
 
   @Override
@@ -65,23 +56,6 @@ public class HistoryLinkRenderer extends AbstractRenderer<Object, HistoryLinkRen
   }
 
   /**
-   * Will handle an incoming {@link ClientHistoryChangeEvent}. This will create a new {@link
-   * HistoryChangeEvent} and inform all listener. In addition it will send it to the {@link
-   * HistoryAPI} if available.
-   *
-   * @param clientEvent The client event to handle.
-   */
-  private void handleHistoryChangeEvent(@NotNull ClientHistoryChangeEvent clientEvent) {
-    HistoryChangeEvent event =
-        new HistoryChangeEvent(
-            this, URI.create(clientEvent.getURI()), null, null, HistoryChangeOrigin.ANCHOR);
-
-    if (historyAPI != null) historyAPI.handleExternalHistoryChangeEvent(event);
-
-    fireEvent(event);
-  }
-
-  /**
    * Will return if any click on the link shall open a new tab instead of pushing the link on the
    * current tab.
    *
@@ -99,6 +73,21 @@ public class HistoryLinkRenderer extends AbstractRenderer<Object, HistoryLinkRen
    */
   public void setOpenNewTab(boolean pOpenNewTab) {
     getState().openNewTab = pOpenNewTab;
+  }
+
+  /**
+   * Will return the {@link HistoryAPI} for the current {@link UI}. This may return null if the
+   * component is not attached to any UI.
+   *
+   * @return The current HistoryAPI or null.
+   */
+  @Nullable
+  private HistoryAPI getHistoryAPI() {
+    UI ui = getUI();
+    // If the component is currently not attached to an UI, just return null.
+    if (ui == null) return null;
+
+    return HistoryAPI.forUI(ui);
   }
 
   /** Represents a data class which holds the required data for the {@link HistoryLinkRenderer}. */
@@ -119,6 +108,28 @@ public class HistoryLinkRenderer extends AbstractRenderer<Object, HistoryLinkRen
     @Nullable
     public URI getURI() {
       return uri;
+    }
+  }
+
+  private class ServerRpcImpl implements HistoryChangeServerRpc {
+    @Override
+    public void onHistoryChange(ClientHistoryChangeEvent historyChangeEvent) {
+      // Build the server-side event based on the client-side event.
+
+      HistoryChangeEvent event =
+          new HistoryChangeEvent(
+              this,
+              URI.create(historyChangeEvent.getURI()),
+              null,
+              null,
+              HistoryChangeOrigin.ANCHOR);
+
+      // If the HistoryAPI is available, pass the server-side event to the HistoryAPI.
+      HistoryAPI historyAPI = getHistoryAPI();
+      if (historyAPI != null) historyAPI.handleExternalHistoryChangeEvent(event);
+
+      // Fire the event on this component.
+      fireEvent(event);
     }
   }
 }

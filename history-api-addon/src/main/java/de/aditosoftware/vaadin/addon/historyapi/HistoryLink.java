@@ -2,6 +2,7 @@ package de.aditosoftware.vaadin.addon.historyapi;
 
 import com.vaadin.ui.AbstractSingleComponentContainer;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.UI;
 import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeEvent;
 import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkState;
 import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryLinkChangeServiceRpc;
@@ -18,29 +19,32 @@ import java.net.URI;
 /** Represents a link, which wraps the given component into an A-Tag. */
 public class HistoryLink extends AbstractSingleComponentContainer
     implements Component.Focusable, HistoryChangeAdapter {
-  private final HistoryAPI historyAPI;
+  /**
+   * Defines the callback, which will be called when the user clicks on the component. If it's null,
+   * the default behavior of the link will be used. Use {@link
+   * #setClickCallback(HistoryLinkClickCallback)} to update this property.
+   */
   private transient HistoryLinkClickCallback clickCallback;
 
+  /**
+   * Constructor which accepts a {@link Component} which will be wrapped the A-Tag.
+   *
+   * @param component The component to wrap in the A-Tag.
+   * @param uri The URI which shall be used for the link.
+   */
   public HistoryLink(@NotNull Component component, @NotNull URI uri) {
-    this(component, uri, null);
-  }
-
-  public HistoryLink(
-      @NotNull Component component, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
-    this.historyAPI = historyAPI;
     setContent(component);
     setURI(uri);
 
-    registerRpc(new ServiceRpcImpl(), HistoryLinkChangeServiceRpc.class);
+    registerDefaultRpc();
   }
 
-  public HistoryLink(@NotNull String caption, @NotNull URI uri, @Nullable HistoryAPI historyAPI) {
-    this.historyAPI = historyAPI;
+  public HistoryLink(@NotNull String caption, @NotNull URI uri) {
     setContent(null);
-    setURI(uri);
     setCaption(caption);
+    setURI(uri);
 
-    registerRpc(new ServiceRpcImpl(), HistoryLinkChangeServiceRpc.class);
+    registerDefaultRpc();
   }
 
   @Override
@@ -51,6 +55,21 @@ public class HistoryLink extends AbstractSingleComponentContainer
   @Override
   protected HistoryLinkState getState(boolean markAsDirty) {
     return (HistoryLinkState) super.getState(markAsDirty);
+  }
+
+  @Override
+  public void focus() {
+    super.focus();
+  }
+
+  @Override
+  public int getTabIndex() {
+    return getState(false).tabIndex;
+  }
+
+  @Override
+  public void setTabIndex(int tabIndex) {
+    getState().tabIndex = tabIndex;
   }
 
   /**
@@ -70,21 +89,6 @@ public class HistoryLink extends AbstractSingleComponentContainer
    */
   public void setURI(URI pURI) {
     getState().uri = pURI.toString();
-  }
-
-  @Override
-  public void focus() {
-    super.focus();
-  }
-
-  @Override
-  public int getTabIndex() {
-    return getState(false).tabIndex;
-  }
-
-  @Override
-  public void setTabIndex(int tabIndex) {
-    getState().tabIndex = tabIndex;
   }
 
   /**
@@ -108,7 +112,8 @@ public class HistoryLink extends AbstractSingleComponentContainer
   }
 
   /**
-   * Will set the callback which will be called when the user clicks on the link.
+   * Will set the callback which will be called when the user clicks on the link. You may pass null
+   * to reset the current click callback.
    *
    * @param pCallback The click callback.
    */
@@ -126,9 +131,31 @@ public class HistoryLink extends AbstractSingleComponentContainer
     return clickCallback != null;
   }
 
+  /** Will register the server-side rpc for this component. */
+  private void registerDefaultRpc() {
+    registerRpc(new ServiceRpcImpl(), HistoryLinkChangeServiceRpc.class);
+  }
+
+  /**
+   * Will return the {@link HistoryAPI} for the current {@link UI}. This may return null if the
+   * component is not attached to any UI.
+   *
+   * @return The current HistoryAPI or null.
+   */
+  @Nullable
+  private HistoryAPI getHistoryAPI() {
+    UI ui = getUI();
+    // If the component is currently not attached to an UI, just return null.
+    if (ui == null) return null;
+
+    return HistoryAPI.forUI(ui);
+  }
+
+  /** Implementation of the default server rpc for this component. */
   private class ServiceRpcImpl implements HistoryLinkChangeServiceRpc {
     @Override
     public void onHistoryChange(ClientHistoryChangeEvent historyChangeEvent) {
+      // Build the server-side event based on the client-side event.
       HistoryChangeEvent event =
           new HistoryChangeEvent(
               this,
@@ -137,14 +164,22 @@ public class HistoryLink extends AbstractSingleComponentContainer
               null,
               HistoryChangeOrigin.ANCHOR);
 
+      // If the HistoryAPI is available, pass the server-side event to the HistoryAPI.
+      HistoryAPI historyAPI = getHistoryAPI();
       if (historyAPI != null) historyAPI.handleExternalHistoryChangeEvent(event);
 
+      // Fire the event on this component.
       fireEvent(event);
     }
 
     @Override
     public void onClick() {
-      if (clickCallback != null) {
+      // Load the current HistoryAPI.
+      HistoryAPI historyAPI = getHistoryAPI();
+
+      // If the click callback is available and the HistoryAPI is available then execute the
+      // callback.
+      if (clickCallback != null && historyAPI != null) {
         HistoryLinkClickCallbackUtil.executeCallback(
             clickCallback, URI.create(getState(false).uri), historyAPI);
       }

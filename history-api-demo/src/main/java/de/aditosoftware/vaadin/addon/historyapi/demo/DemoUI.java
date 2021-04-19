@@ -100,18 +100,18 @@ public class DemoUI extends UI {
         });
     buttonLayout.addComponent(pushWithStateButton);
 
-    HistoryLink linkWrapper = new HistoryLink("TEST!", URI.create("/client"), historyAPI);
+    HistoryLink linkWrapper = new HistoryLink("TEST!", URI.create("/client"));
     linkWrapper.setId("test-history-link-1");
     linkWrapper.setIcon(VaadinIcons.ANCHOR);
 
     HistoryLink linkWrapperNewTab =
-        new HistoryLink("TEST! but in a new tab...", URI.create("/client"), historyAPI);
+        new HistoryLink("TEST! but in a new tab...", URI.create("/client"));
     linkWrapperNewTab.setId("test-history-link-1");
     linkWrapperNewTab.setIcon(VaadinIcons.ANCHOR);
     linkWrapperNewTab.setOpenNewTab(true);
 
     HistoryLink linkClickCallback =
-        new HistoryLink("TEST! But with a click callback", URI.create("/client"), historyAPI);
+        new HistoryLink("TEST! But with a click callback", URI.create("/client"));
     linkClickCallback.setId("test-history-link-1");
     linkClickCallback.setIcon(VaadinIcons.ANCHOR);
     linkClickCallback.setClickCallback(
@@ -125,15 +125,15 @@ public class DemoUI extends UI {
     focusButton.setId("test-focus-button-1");
 
     mainLayout.addComponents(linkWrapper, linkWrapperNewTab, linkClickCallback, focusButton);
-    mainLayout.addComponent(createTestGrid(historyAPI));
+    mainLayout.addComponent(createTestGrid());
   }
 
-  private Grid<TestGridData> createTestGrid(HistoryAPI historyAPI) {
+  private Grid<TestGridData> createTestGrid() {
     Grid<TestGridData> grid = new Grid<>();
     grid.setId("test-grid-1");
 
-    HistoryLinkRenderer linkRenderer = new HistoryLinkRenderer(historyAPI);
-    HistoryLinkRenderer newTabLinkRenderer = new HistoryLinkRenderer(historyAPI);
+    HistoryLinkRenderer linkRenderer = new HistoryLinkRenderer();
+    HistoryLinkRenderer newTabLinkRenderer = new HistoryLinkRenderer();
     newTabLinkRenderer.setOpenNewTab(true);
 
     grid.addColumn(TestGridData::getText, new TextRenderer());

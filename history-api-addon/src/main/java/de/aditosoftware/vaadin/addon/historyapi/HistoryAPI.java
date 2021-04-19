@@ -16,9 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.net.URI;
-import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Represents the implements of {@link HistoryAPI} as Vaadin UI extension. This extension can only
@@ -48,19 +46,10 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    * @return The HistoryAPI instance.
    */
   public static HistoryAPI forUI(@NotNull UI pUI) {
-    // Load the current extensions of the given UI.
-    Collection<Extension> extensions = pUI.getExtensions();
-
-    // If there are extensions available on the UI, we need to check if there is a matching one.
-    if (extensions != null && !extensions.isEmpty()) {
-      // Filter the extensions for a HistoryAPI.
-      Optional<Extension> optionalExtension =
-          extensions.stream().filter(it -> it instanceof HistoryAPI).findFirst();
-
-      // If a HistoryAPI instance was found, then just return it.
-      if (optionalExtension.isPresent() && optionalExtension.get() instanceof HistoryAPI) {
-        return (HistoryAPI) optionalExtension.get();
-      }
+    // If there is an existing instance available, then return it immediately.
+    HistoryAPI existing = getExistingInstance(pUI);
+    if (existing != null) {
+      return existing;
     }
 
     // As no existing HistoryAPI instance could be found, we need to create a new one here.
@@ -211,8 +200,10 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    * @param pMap The map to encode.
    * @return The encoded map.
    */
-  @NotNull
-  private String encodeMap(@NotNull Map<String, String> pMap) {
+  @Nullable
+  private String encodeMap(@Nullable Map<String, String> pMap) {
+    if (pMap == null) return null;
+
     return gson.toJson(pMap);
   }
 
@@ -222,8 +213,10 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    * @param pString The string to encode.
    * @return The encoded string.
    */
-  @NotNull
-  private String encodeString(@NotNull String pString) {
+  @Nullable
+  private String encodeString(@Nullable String pString) {
+    if (pString == null) return null;
+
     return gson.toJson(pString);
   }
 
@@ -288,5 +281,26 @@ public class HistoryAPI extends AbstractExtension implements HistoryChangeAdapte
    */
   void handleExternalHistoryChangeEvent(HistoryChangeEvent event) {
     fireEvent(event);
+  }
+
+  /**
+   * Will load an existing {@link HistoryAPI} from the given {@link UI}. If there is no instance
+   * present, null will be returned. This basically just iterates over the extensions of the UI and
+   * checks each if its an HistoryAPI.
+   *
+   * @param pUI The UI to load the instance from.
+   * @return The existing instance or null.
+   */
+  @Nullable
+  private static HistoryAPI getExistingInstance(@NotNull UI pUI) {
+    // Iterate over the extensions of the UI and check on each if it's a HistoryAPI instance.
+    for (Extension extension : pUI.getExtensions()) {
+      if (extension instanceof HistoryAPI) {
+        return (HistoryAPI) extension;
+      }
+    }
+
+    // Return null as fallback.
+    return null;
   }
 }
