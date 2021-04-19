@@ -5,7 +5,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeEvent;
 import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkState;
-import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryLinkChangeServiceRpc;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryLinkChangeServerRpc;
 import de.aditosoftware.vaadin.addon.historyapi.event.HistoryChangeAdapter;
 import de.aditosoftware.vaadin.addon.historyapi.event.HistoryChangeEvent;
 import de.aditosoftware.vaadin.addon.historyapi.event.HistoryChangeOrigin;
@@ -133,7 +133,7 @@ public class HistoryLink extends AbstractSingleComponentContainer
 
   /** Will register the server-side rpc for this component. */
   private void registerDefaultRpc() {
-    registerRpc(new ServiceRpcImpl(), HistoryLinkChangeServiceRpc.class);
+    registerRpc(new ServerRpcImpl(), HistoryLinkChangeServerRpc.class);
   }
 
   /**
@@ -152,7 +152,7 @@ public class HistoryLink extends AbstractSingleComponentContainer
   }
 
   /** Implementation of the default server rpc for this component. */
-  private class ServiceRpcImpl implements HistoryLinkChangeServiceRpc {
+  private class ServerRpcImpl implements HistoryLinkChangeServerRpc {
     @Override
     public void onHistoryChange(ClientHistoryChangeEvent historyChangeEvent) {
       // Build the server-side event based on the client-side event.

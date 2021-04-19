@@ -13,7 +13,7 @@ import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChange
 import de.aditosoftware.vaadin.addon.historyapi.client.event.ClientHistoryChangeOrigin;
 import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkState;
 import de.aditosoftware.vaadin.addon.historyapi.client.link.HistoryLinkWidget;
-import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryLinkChangeServiceRpc;
+import de.aditosoftware.vaadin.addon.historyapi.client.rpc.HistoryLinkChangeServerRpc;
 import de.aditosoftware.vaadin.addon.historyapi.client.util.HistoryLinkUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -89,8 +89,8 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
   public void updateCaption(ComponentConnector connector) {}
 
   @Override
-  public @NotNull HistoryLinkChangeServiceRpc getHistoryChangeServerRpc() {
-    return getRpcProxy(HistoryLinkChangeServiceRpc.class);
+  public @NotNull HistoryLinkChangeServerRpc getHistoryChangeServerRpc() {
+    return getRpcProxy(HistoryLinkChangeServerRpc.class);
   }
 
   private void updateLayout() {
