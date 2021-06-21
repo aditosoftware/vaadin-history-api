@@ -23,11 +23,13 @@ public interface HistoryChangeAwareConnector extends ServerConnector {
    * @param event The history change event to handle.
    */
   default void handleHistoryChange(@NotNull ClientHistoryChangeEvent event) {
-    // Fetch the history change server rpc.so
+    // Fetch the history change server rpc.
     HistoryChangeServerRpc historyChangeServerRpc = getHistoryChangeServerRpc();
 
     // If there is no HistoryAPIConnector given, the event will be piped
     // through the current rpc.
-    if (historyChangeServerRpc != null) getHistoryChangeServerRpc().onHistoryChange(event);
+    if (historyChangeServerRpc != null) {
+      getHistoryChangeServerRpc().onHistoryChange(event);
+    }
   }
 }

@@ -27,24 +27,50 @@ public class HistoryLink extends AbstractSingleComponentContainer
   private transient HistoryLinkClickCallback clickCallback;
 
   /**
-   * Constructor which accepts a {@link Component} which will be wrapped the A-Tag.
+   * Constructor which accepts a {@link Component} which will be wrapped by an anchor tag.
    *
-   * @param component The component to wrap in the A-Tag.
-   * @param uri The URI which shall be used for the link.
+   * @param component Component to wrap in an anchor tag.
+   * @param uri URI which shall be used for the link.
    */
-  public HistoryLink(@NotNull Component component, @NotNull URI uri) {
+  public HistoryLink(@NotNull Component component, @Nullable URI uri) {
     setContent(component);
     setURI(uri);
 
     registerDefaultRpc();
   }
 
-  public HistoryLink(@NotNull String caption, @NotNull URI uri) {
+  /**
+   * Constructor which accepts a {@link String} as caption.
+   *
+   * @param caption Caption to display.
+   * @param uri URI which shall be used for the link.
+   */
+  public HistoryLink(@NotNull String caption, @Nullable URI uri) {
     setContent(null);
     setCaption(caption);
     setURI(uri);
 
     registerDefaultRpc();
+  }
+
+  /**
+   * Constructor which accepts a {@link Component} which will be wrapped by an anchor tag. This
+   * constructor does not set an {@link URI} on the anchor tag.
+   *
+   * @param component Component to wrap in an anchor tag.
+   */
+  public HistoryLink(@NotNull Component component) {
+    this(component, null);
+  }
+
+  /**
+   * Constructor which accepts a {@link String} as caption. This constructor does not set an {@link
+   * URI} on the anchor tag.
+   *
+   * @param caption Caption to display.
+   */
+  public HistoryLink(@NotNull String caption) {
+    this(caption, null);
   }
 
   @Override
@@ -78,17 +104,34 @@ public class HistoryLink extends AbstractSingleComponentContainer
    * @return The URI.
    */
   @Nullable
-  public URI setURI() {
-    return URI.create(getState().uri);
+  public URI getURI() {
+    final String current = getState().uri;
+
+    // If there is currently not URI set, then just return null.
+    if (current == null) {
+      return null;
+    }
+
+    // Parse the String representation of the URI into an actual URI object.
+    return URI.create(current);
   }
 
   /**
-   * Will set the {@link URI} to which the link currently points.
+   * Will set the {@link URI} to which the link currently points. The URI may be null, if the anchor
+   * shall not set an "href" attribute.
    *
-   * @param pURI The new URI for the Link.
+   * @param uri The new URI for the Link.
    */
-  public void setURI(URI pURI) {
-    getState().uri = pURI.toString();
+  public void setURI(@Nullable URI uri) {
+    String newURI = null;
+
+    // If the new URI is not null, then get the string representation and use it as new state.
+    if (uri != null) {
+      newURI = uri.toString();
+    }
+
+    // Update the state with the new URI string representation, this might be null.
+    getState().uri = newURI;
   }
 
   /**
@@ -177,7 +220,7 @@ public class HistoryLink extends AbstractSingleComponentContainer
       // Load the current HistoryAPI.
       HistoryAPI historyAPI = getHistoryAPI();
 
-      // If the click callback is available and the HistoryAPI is available then execute the
+      // If the click callback is available, and the HistoryAPI is available then execute the
       // callback.
       if (clickCallback != null && historyAPI != null) {
         HistoryLinkClickCallbackUtil.executeCallback(

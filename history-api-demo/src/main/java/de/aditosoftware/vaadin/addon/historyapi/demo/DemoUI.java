@@ -120,11 +120,26 @@ public class DemoUI extends UI {
           return HistoryLinkClickCallback.EResult.PUSH;
         });
 
+    HistoryLink linkWithoutHref = new HistoryLink("TEST! With not href...");
+    linkClickCallback.setId("test-history-link-1");
+    linkClickCallback.setIcon(VaadinIcons.ANCHOR);
+
+    Button toggleHref = new Button("Toggle href in button above");
+    toggleHref.addClickListener(
+        clickEvent -> {
+          if (linkWithoutHref.getURI() == null)
+            linkWithoutHref.setURI(URI.create("https://google.com"));
+          else {
+            linkWithoutHref.setURI(null);
+          }
+        });
+
     Button focusButton = new Button("Focus link above");
     focusButton.addClickListener(event -> linkWrapper.focus());
     focusButton.setId("test-focus-button-1");
 
-    mainLayout.addComponents(linkWrapper, linkWrapperNewTab, linkClickCallback, focusButton);
+    mainLayout.addComponents(
+        linkWrapper, linkWrapperNewTab, linkClickCallback, linkWithoutHref, toggleHref, focusButton);
     mainLayout.addComponent(createTestGrid());
   }
 

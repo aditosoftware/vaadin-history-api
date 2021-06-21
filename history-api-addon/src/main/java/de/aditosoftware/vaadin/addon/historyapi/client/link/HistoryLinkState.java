@@ -7,7 +7,11 @@ import de.aditosoftware.vaadin.addon.historyapi.client.connector.HistoryLinkConn
 public class HistoryLinkState extends AbstractSingleComponentContainerState {
   public int tabIndex;
 
-  /** Defines the actual URI which shall be opened by this link. */
+  /**
+   * Defines the actual URI which shall be opened by this link. This is the {@link String}
+   * representation of the URI. This might be null if no URI shall be set on the anchor tag
+   * (basically just does not define the "href" attribute).
+   */
   public String uri;
 
   /** Defines if any click shall open a new tab instead of pushing the link on this tab. */

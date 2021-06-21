@@ -43,32 +43,39 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
   public void onStateChanged(StateChangeEvent stateChangeEvent) {
     super.onStateChanged(stateChangeEvent);
 
-    if (stateChangeEvent.hasPropertyChanged("uri"))
+    if (stateChangeEvent.hasPropertyChanged("uri")) {
       if (getState().uri == null) {
         getWidget().getElement().removeAttribute("href");
       } else {
         getWidget().getElement().setAttribute("href", getState().uri);
       }
+    }
 
     if (stateChangeEvent.hasPropertyChanged("openNewTab")) {
       if (getState().openNewTab) getWidget().getElement().setAttribute("target", "_blank");
       else getWidget().getElement().setAttribute("target", "");
     }
 
-    if (stateChangeEvent.hasPropertyChanged("tabIndex"))
+    if (stateChangeEvent.hasPropertyChanged("tabIndex")) {
       getWidget().getElement().setTabIndex(getState().tabIndex);
+    }
 
     // Update the caption element.
     if (stateChangeEvent.hasPropertyChanged("caption")
-        || stateChangeEvent.hasPropertyChanged("captionAsHtml"))
+        || stateChangeEvent.hasPropertyChanged("captionAsHtml")) {
       VCaption.setCaptionText(getWidget().captionElement, getState());
+    }
 
     // Set the icon widget to null if it's set.
-    if (getWidget().icon != null) getWidget().icon = null;
+    if (getWidget().icon != null) {
+      getWidget().icon = null;
+    }
 
     // Set the icon widget if there is a icon on the resources.
     Icon icon = getIcon();
-    if (icon != null) getWidget().icon = icon;
+    if (icon != null) {
+      getWidget().icon = icon;
+    }
 
     // Update the layout.
     updateLayout();
@@ -122,7 +129,13 @@ public class HistoryLinkConnector extends AbstractSingleComponentContainerConnec
    * @param event The event of the click.
    */
   private void handleElementClick(ClickEvent event) {
-    if (!getState().openNewTab && HistoryLinkUtil.handleAnchorClick(getState().uri, event)) {
+    // Define if the click on the element is valid. This condition is dependent on 3 options.
+    final boolean isValidElementClick =
+        getState().uri != null
+            && !getState().openNewTab
+            && HistoryLinkUtil.handleAnchorClick(getState().uri, event);
+
+    if (isValidElementClick) {
       if (getState().hasClickCallback) {
         getHistoryChangeServerRpc().onClick();
       } else {
