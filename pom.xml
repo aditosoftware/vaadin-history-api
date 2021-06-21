@@ -5,7 +5,7 @@
 	<groupId>de.aditosoftware.vaadin.addon</groupId>
 	<artifactId>history-api-root</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0.0</version>
+	<version>3.1.0</version>
 	<name>MyComponent Add-on Root Project</name>
 
 	<prerequisites>
